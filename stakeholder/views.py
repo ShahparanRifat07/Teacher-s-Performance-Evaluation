@@ -36,37 +36,60 @@ def register(request):
         return render(request, "register.html")
 
 
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        print(user)
+        institution = Institution.objects.filter(institution_admin=user)
+        if institution:
+            print(institution)
+            context={
+                'admin' : institution[0].institution_admin,
+            }
+            return render(request,'admin_dashboard.html',context)
+        else:
+            student = Student.objects.get(user= user)
+            if student is not None:
+                context = {
+                    'student' : student,
+                }
+                return render(request,'student_dashboard.html',context)
+            else:
+                pass
+    else:
+        return redirect('login')
+        
+
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        
         try:
             user = authenticate(username= username,password = password)
             if user is not None:
-                institution = Institution.objects.filter(institution_admin=user)
-                if institution is not None:
-                    print(institution[0].institution_admin)
-                    return redirect("login")
-                else:
-                    print("not admin")
-                    return redirect("login")
+                login(request,user)
+                return redirect(dashboard)
             else:
                 print("no user found")
                 return redirect("login")
         except:
-            print("user does not exits")
+            print("user does not exits==user_login")
             return redirect("login")
     elif request.method == "GET":
         return render(request, 'login.html')
 
 
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+
 
 def add_student(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)
-        if institution is not None:
+        if institution:
             institution_admin = institution[0].institution_admin
             if request.method == 'POST':
                 first_name = request.POST.get('first_name')
@@ -111,6 +134,22 @@ def add_student(request):
                     'departments' : departments,
                 }
                 return render(request,'add_student.html',context)
+        else:
+            return HttpResponse("You are not allowed")
+    else:
+        return redirect('login')
+
+
+def view_student_list(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            students = Student.objects.filter(institution=institution[0])
+            context={
+                "students" : students,
+                'admin' : institution[0].institution_admin,
+            }
+            return render(request,'student_list.html',context)
         else:
             return HttpResponse("You are not allowed")
     else:

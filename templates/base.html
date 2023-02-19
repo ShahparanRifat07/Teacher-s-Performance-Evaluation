@@ -25,6 +25,7 @@
             <li>
                 <a href="index.html"><i class="bx bxs-dashboard icon"></i>Dashboard</a>
             </li>
+            {% if admin %}
             <li>
                 <a href=""><i class="fas fa-chalkboard-teacher icon"></i>Teachers
                     <i class="bx bx-chevron-right icon-right"></i></a>
@@ -37,7 +38,7 @@
                 <a href=""><i class="fas fa-graduation-cap icon"></i></i>Students
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="student_list.html">Student List</a></li>
+                    <li><a href="{%  url 'student-list' %}">Student List</a></li>
                     <li><a href="add_student.html">Add Student</a></li>
                 </ul>
             </li>
@@ -71,6 +72,7 @@
                 </ul>
             </li>
 
+            {% endif %}
             <li>
                 <a href=""><i class="fas fa-book-reader icon"></i>Courses
                     <i class="bx bx-chevron-right icon-right"></i></a>
@@ -138,7 +140,7 @@
                         <a href=""><i class="bx bxs-user-circle icon"></i>Profile</a>
                     </li>
                     <li>
-                        <a href=""><i class="bx bxs-user-circle icon"></i>Logout</a>
+                        <a href="{% url 'logout' %}"><i class="bx bxs-user-circle icon"></i>Logout</a>
                     </li>
                 </ul>
             </div>

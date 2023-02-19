@@ -1,6 +1,6 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from stakeholder.models import Institution, Student, Parent
+from stakeholder.models import Institution, Student, Parent,Teacher
 from django.contrib.auth.models import User
 from nameparser import HumanName
 
@@ -52,3 +52,19 @@ def create_post_save_parent_for_student(sender, instance, created, *args, **kwar
 
         parent = Parent(user=user, phone_number=phone_number,institution = instance.institution,student = instance)
         parent.save()
+
+
+@receiver(pre_save, sender=Teacher)
+def create_user_for_teacher(sender, instance, *args, **kwargs):
+    if instance.id is None:
+        first_name = instance.first_name
+        last_name = instance.last_name
+        email = instance.email
+        username = instance._teacher_username
+        password = instance._teacher_password
+
+        user = User(username=username, first_name=first_name, last_name=last_name, email = email)
+        user.set_password(password)
+        user.save()
+
+        instance.user = user

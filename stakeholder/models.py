@@ -112,9 +112,36 @@ class Parent(models.Model):
 
 
 class Teacher(models.Model):
-    pass
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    teacher_id = models.CharField(max_length=32)
+    designation = models.CharField(max_length=64)
+    joining_date = models.DateField(blank=True,null=True)
+    gender = models.CharField(max_length=2,choices=GENDER_CHOICE)
+    dob = models.DateField(blank=True,null=True)
+    phone = models.CharField(max_length=16)
+    image = models.ImageField(upload_to='Profile_Picture', default='default.jpg')
+    email = models.CharField(max_length=64)
+    address = models.TextField(blank=True, null=True)
+    city = models.CharField(max_length=64,blank=True,null=True)
+    state = models.CharField(max_length=64,blank=True,null=True)
+    zipcode = models.CharField(max_length=64,blank=True,null=True)
+
+    department = models.ForeignKey(Department,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
 
 
+    @property
+    def teacher_username(self):
+        return self._teacher_username
+    
+    @property
+    def teacher_password(self):
+        return self._teacher_password
+
+    def __str__(self):
+        return self.first_name+" "+self.last_name
 
 
         
