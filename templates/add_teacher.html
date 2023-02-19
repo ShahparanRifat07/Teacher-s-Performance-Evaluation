@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- MAIN -->
+<main>
+    <h1 class="title">Add Teachers</h1>
+    <ul class="breadcrumbs">
+        <li><a href="index.html">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="teacher_list.html">Teachers</a></li>
+        <li class="divider">/</li>
+        <li><a href="" class="active">Add Teacher</a></li>
+    </ul>
+
+    <div class="add-student">
+        <div class="card">
+            <div class="add-student-head">
+                <h4 class="text-dark">Teacher Information</h4>
+                <a href="" class="btn btn-success"><i class="fa-solid fa-file-excel icon"></i> Add Teachers Using
+                    XLS</a>
+            </div>
+            <hr>
+            <div class="add-student-form">
+                <form action="" method="POST">
+
+
+                    <h5 class="text-dark mb-4">Basic Details:</h5>
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">First Name</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter First Name</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Last Name</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Last Name</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Teacher ID</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Teacher ID</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Designation</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter Designation</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Joining Date</label>
+                            <div class="form-outline">
+                                <input type="date" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">DD-MM-YYYY</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Gender</label>
+                            <select class="form-select form-select" aria-label=".form-select-sm example">
+                                <option selected disabled>Select Gender</option>
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                                <option value="3">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Date of Birth</label>
+                            <div class="form-outline">
+                                <input type="date" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">DD-MM-YYYY</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Phone Number</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Phone Number</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Department</label>
+                            <select class="form-select form-select" aria-label=".form-select-sm example">
+                                <option selected disabled>Select Department</option>
+                                <option value="1">Science</option>
+                                <option value="2">Commerce</option>
+                                <option value="3">Arts</option>
+                                <option value="4">None</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4">
+                        <h5 class="text-dark mb-4 mt-4">Login Details:</h5>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Username</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter Username</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Email</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Email Address</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Password</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Password</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4">
+                        <h5 class="text-dark mb-4 mt-4">Address:</h5>
+                        <div class="col-12">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Address</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter Address</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4">
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">City</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter City</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">State</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter State</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Zipcode</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Zipcode</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Submit button -->
+                    <div class="student-submit">
+                        <button type="submit" data-mdb-ripple-duration="0"
+                            class="btn btn-primary btn-block mb-4 mt-4">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
