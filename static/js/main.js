@@ -437,6 +437,11 @@ chart.render();
 
 
 //Create Evaluation
+$('#datepicker').daterangepicker({
+  locale: {
+           format: 'DD/MM/YYYY'
+           }
+});
 
 $(function () {
   var dtToday = new Date();
