@@ -45,7 +45,7 @@ class Institution(models.Model):
 class Department(models.Model):
     name = models.CharField(max_length=128)
     dept_head = models.CharField(max_length=64)
-    dept_id = models.CharField(max_length=11,unique=True)
+    dept_id = models.CharField(max_length=11)
     description = models.TextField(null=True,blank=True)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     
@@ -56,7 +56,7 @@ class Department(models.Model):
 class Student(models.Model):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
-    student_id = models.CharField(max_length=11, unique=True)
+    student_id = models.CharField(max_length=11)
     father_name = models.CharField(max_length=64)
     mother_name = models.CharField(max_length=64)
     gender = models.CharField(max_length = 2, choices = GENDER_CHOICE)

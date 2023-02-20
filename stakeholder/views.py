@@ -207,6 +207,24 @@ def add_teacher(request):
 
 
 
+def view_teacher_list(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            teachers = Teacher.objects.filter(institution=institution[0])
+            context={
+                "teachers" : teachers,
+                'admin' : institution[0].institution_admin,
+            }
+            return render(request,'teacher_list.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('login')
+
+
+
+
 def add_department(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)
@@ -231,6 +249,8 @@ def add_department(request):
             raise PermissionDenied("You are not allowed")
     else:
         return redirect('login')
+
+
 
 
 def view_department_list(request):
