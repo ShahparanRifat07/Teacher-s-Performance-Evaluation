@@ -29,24 +29,21 @@
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4">
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">First Name</label>
+                            <label  class="form-label text-dark">First Name</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example1" class="form-control" />
-                                <label class="form-label" for="form6Example1">Enter First Name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="Enter First Name"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Last Name</label>
+                            <label  class="form-label text-dark">Last Name</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Last Name</label>
+                                <input type="text" name="last_name"  class="form-control" placeholder="Enter Last Name"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Teacher ID</label>
+                            <label  class="form-label text-dark">Teacher ID</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Teacher ID</label>
+                                <input type="text" name="teacher_id" class="form-control" placeholder="Enter Teacher ID"/>
                             </div>
                         </div>
                     </div>
@@ -55,22 +52,20 @@
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4">
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Designation</label>
+                            <label  class="form-label text-dark">Designation</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example1" class="form-control" />
-                                <label class="form-label" for="form6Example1">Enter Designation</label>
+                                <input type="text" name="designation" class="form-control" placeholder="Enter Designation"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Joining Date</label>
+                            <label  class="form-label text-dark">Joining Date</label>
                             <div class="form-outline">
-                                <input type="date" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">DD-MM-YYYY</label>
+                                <input type="date" name="joining_date" class="form-control" placeholder="MM-DD-YYYY"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Gender</label>
-                            <select class="form-select form-select" aria-label=".form-select-sm example">
+                            <label  class="form-label text-dark">Gender</label>
+                            <select name="gender" class="form-select form-select" aria-label=".form-select-sm example">
                                 <option selected disabled>Select Gender</option>
                                 <option value="1">Male</option>
                                 <option value="2">Female</option>
@@ -82,27 +77,24 @@
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4">
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Date of Birth</label>
+                            <label  class="form-label text-dark">Date of Birth</label>
                             <div class="form-outline">
-                                <input type="date" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">DD-MM-YYYY</label>
+                                <input type="date" name="dob" class="form-control" placeholder="MM-DD-YYYY"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Phone Number</label>
+                            <label  class="form-label text-dark">Phone Number</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Phone Number</label>
+                                <input type="text" name="phone"  class="form-control" placeholder="Enter Phone Number"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Department</label>
-                            <select class="form-select form-select" aria-label=".form-select-sm example">
+                            <label  class="form-label text-dark">Department</label>
+                            <select name="department" class="form-select form-select" aria-label=".form-select-sm example">
                                 <option selected disabled>Select Department</option>
-                                <option value="1">Science</option>
-                                <option value="2">Commerce</option>
-                                <option value="3">Arts</option>
-                                <option value="4">None</option>
+                                {% for department in departments %}
+                                <option value="{{department.id}}">{{department.name}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -112,24 +104,21 @@
                     <div class="row mb-4 mt-4">
                         <h5 class="text-dark mb-4 mt-4">Login Details:</h5>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Username</label>
+                            <label  class="form-label text-dark">Username</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example1" class="form-control" />
-                                <label class="form-label" for="form6Example1">Enter Username</label>
+                                <input type="text" name="username"  class="form-control" placeholder="Enter Username"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Email</label>
+                            <label  class="form-label text-dark">Email</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Email Address</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter Email Address"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Password</label>
+                            <label  class="form-label text-dark">Password</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Password</label>
+                                <input type="password" name="password"  class="form-control" placeholder="Enter Password"/>
                             </div>
                         </div>
                     </div>
@@ -140,10 +129,9 @@
                     <div class="row mb-4 mt-4">
                         <h5 class="text-dark mb-4 mt-4">Address:</h5>
                         <div class="col-12">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Address</label>
+                            <label  class="form-label text-dark">Address</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example1" class="form-control" />
-                                <label class="form-label" for="form6Example1">Enter Address</label>
+                                <input type="text" name="address" class="form-control" placeholder="Enter Address"/>
                             </div>
                         </div>
                     </div>
@@ -151,24 +139,21 @@
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4 mt-4">
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">City</label>
+                            <label  class="form-label text-dark">City</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example1" class="form-control" />
-                                <label class="form-label" for="form6Example1">Enter City</label>
+                                <input type="text" name="city" class="form-control" placeholder="Enter City"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">State</label>
+                            <label  class="form-label text-dark">State</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter State</label>
+                                <input type="text" name="state"  class="form-control" placeholder="Enter State"/>
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="exampleInputEmail1" class="form-label text-dark">Zipcode</label>
+                            <label  class="form-label text-dark">Zipcode</label>
                             <div class="form-outline">
-                                <input type="text" id="form6Example2" class="form-control" />
-                                <label class="form-label" for="form6Example2">Enter Zipcode</label>
+                                <input type="text" name="zipcode" class="form-control" placeholder="Enter Zipcode"/>
                             </div>
                         </div>
                     </div>

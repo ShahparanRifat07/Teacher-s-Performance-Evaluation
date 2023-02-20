@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from .models import Institution,Student,Parent,Department
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -132,6 +133,7 @@ def add_student(request):
                 departments = Department.objects.filter(institution = institution[0])
                 context = {
                     'departments' : departments,
+                    'admin' : institution[0].institution_admin,
                 }
                 return render(request,'add_student.html',context)
         else:
@@ -154,3 +156,24 @@ def view_student_list(request):
             return HttpResponse("You are not allowed")
     else:
         return redirect('login')
+
+
+def add_teacher(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            institution_admin = institution[0].institution_admin
+            if request.method == 'POST':
+                return redirect('add-teacher')
+            if request.method == 'GET':
+                departments = Department.objects.filter(institution = institution[0])
+                context = {
+                    'departments' : departments,
+                    'admin' : institution[0].institution_admin,
+                }
+                return render(request,'add_teacher.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('login')
+

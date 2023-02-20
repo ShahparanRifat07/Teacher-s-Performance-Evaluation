@@ -23,7 +23,7 @@
     <section id="sidebar">
         <ul class="side-menu">
             <li>
-                <a href="index.html"><i class="bx bxs-dashboard icon"></i>Dashboard</a>
+                <a href="{% url 'dashboard' %}"><i class="bx bxs-dashboard icon"></i>Dashboard</a>
             </li>
             {% if admin %}
             <li>
@@ -31,7 +31,7 @@
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
                     <li><a href="teacher_list.html">Teacher List</a></li>
-                    <li><a href="add_teacher.html">Add Teacher</a></li>
+                    <li><a href="{% url 'add-teacher' %}">Add Teacher</a></li>
                 </ul>
             </li>
             <li>
@@ -39,7 +39,7 @@
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
                     <li><a href="{%  url 'student-list' %}">Student List</a></li>
-                    <li><a href="add_student.html">Add Student</a></li>
+                    <li><a href="{% url 'add-student' %}">Add Student</a></li>
                 </ul>
             </li>
 
