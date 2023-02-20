@@ -1,0 +1,1067 @@
+
+html {
+    height: 100%
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --purple: #03A9F4;
+    --gray: #F7F8FC;
+    --dark-gray: #757575;
+    --white: #ffffff;
+    --dark: #000;
+    --light-dark: #272C33;
+    --red: #D32F2F;
+    --light-red: #F44336;
+}
+
+body {
+    background-color: var(--gray);
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+
+.bg-color-purple {
+    background: var(--purple);
+}
+
+.bg-color-purple-text-white {
+    background: var(--purple);
+    color: var(--white);
+}
+
+.star-color{
+    color: var(--red);
+}
+
+
+
+
+/* SIDEBAR */
+
+
+
+#sidebar {
+    position: fixed;
+    max-width: 260px;
+    width: 100%;
+    background: var(--white);
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: all .3s ease;
+    z-index: 200;
+}
+
+
+.hide {
+    max-width: 60px !important;
+}
+
+.hide:hover {
+    max-width: 260px !important;
+}
+
+
+#sidebar ::-webkit-scrollbar {
+    display: none;
+}
+
+
+#sidebar .icon {
+    min-width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* color: var(--white); */
+    margin-right: 6px;
+}
+
+#sidebar .icon-right {
+    margin-left: auto;
+    transition: all .3s ease;
+}
+
+
+
+#sidebar .side-menu {
+    margin: 36px 0;
+    padding: 0 20px;
+    transition: all .3s ease;
+}
+
+
+.hide .side-menu {
+    padding: 0 6px !important;
+}
+
+.hide:hover .side-menu {
+    padding: 0 20px;
+}
+
+
+
+
+#sidebar .side-menu a {
+    display: flex;
+    align-items: center;
+    color: var(--light-dark);
+    font-size: 14px;
+    padding: 12px 16px 12px 0;
+    transition: all .3s ease;
+    border-radius: 10px;
+    margin: 4px 0;
+    white-space: nowrap;
+    /* grid-gap: 6px; */
+}
+
+
+#sidebar .side-menu>li>a:hover {
+    background: var(--purple);
+}
+
+#sidebar .side-menu>li>a.active .icon-right {
+    transform: rotateZ(90deg);
+}
+
+#sidebar .side-menu>li>a.active,
+#sidebar .side-menu>li>a.active:hover {
+    background: var(--purple);
+}
+
+
+#sidebar .side-dropdown {
+    padding-left: 48px;
+    max-height: 0;
+    overflow-y: hidden;
+    transition: all .15s ease;
+}
+
+#sidebar .side-dropdown.show {
+    max-height: 1000px;
+}
+
+#sidebar .side-dropdown a:hover {
+    color: var(--purple);
+}
+
+
+
+/* SIDEBAR */
+
+
+
+
+
+
+
+
+
+/* CONTENT */
+
+
+#content {
+    position: relative;
+    width: calc(100% - 260px);
+    left: 260px;
+    transition: all .3s ease;
+}
+
+.hide+#content {
+    width: calc(100% - 60px);
+    left: 60px;
+}
+
+
+/* NAVBAR */
+
+nav {
+    background: var(--white);
+    height: 64px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    grid-gap: 28px;
+}
+
+nav .toggle-sidebar {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+nav form {
+    max-width: 400px;
+    width: 100%;
+    margin-right: auto;
+}
+
+nav .form-group {
+    position: relative;
+}
+
+nav .form-group input {
+    width: 100%;
+    background-color: var(--gray);
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    padding: 10px 36px 10px 36px;
+    transition: all .3s ease;
+}
+
+nav .form-group input:focus {
+    box-shadow: 0 0 0 1px var(--purple);
+}
+
+
+nav .form-group .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+}
+
+nav .nav-link {
+    position: relative;
+
+}
+
+nav .nav-link .icon {
+    font-size: 18px;
+    color: var(--light-dark);
+}
+
+nav .nav-link .badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    background: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+nav .divider {
+    width: 1px;
+    background: var(--light-dark);
+    height: 12px;
+    display: block;
+}
+
+nav .profile {
+    position: relative;
+}
+
+nav .profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+nav .profile .profile-link {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: var(--white);
+    padding: 10px 0;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, .1);
+    border-radius: 10px;
+    width: 160px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease;
+    z-index: 1;
+}
+
+nav .profile .profile-link.show {
+    opacity: 1;
+    pointer-events: visible;
+    top: 100%;
+}
+
+nav .profile .profile-link a {
+    padding: 10px 16px;
+    display: flex;
+    grid-gap: 10px;
+    font-size: 14px;
+    color: var(--light-dark);
+    align-items: center;
+    transition: all .3s ease;
+}
+
+nav .profile .profile-link a:hover {
+    background: var(--purple);
+}
+
+/* NAVBAR */
+
+
+
+
+
+/* MAIN */
+main {
+    width: 100%;
+    padding: 24px 20px 20px 20px;
+}
+
+main .title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+main .breadcrumbs {
+    display: flex;
+    grid-gap: 6px;
+}
+
+main .breadcrumbs li,
+main .breadcrumbs li a {
+    font-size: 14px;
+}
+
+main .breadcrumbs li a {
+    color: var(--purple);
+}
+
+main .breadcrumbs li a.active,
+main .breadcrumbs li.divider {
+    color: var(--dark-gray);
+    pointer-events: none;
+}
+
+main .info-data {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+    /* border: 1px solid red; */
+}
+
+main .info-data .card .head {
+    background: var(--purple);
+    padding: 4px;
+    color: var(--white);
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+main .info-data .card .title {
+    font-size: 60px;
+    padding: 16px;
+    margin: auto;
+}
+
+main .notice-data {
+    margin-top: 20px;
+    min-width: 300px;
+    width: 100%;
+
+}
+
+main .notice-data .card {
+    min-height: 150px;
+}
+
+main .notice-data .card .card-header {
+    background: var(--red);
+}
+
+main .notice-data .card .card-header h5 {
+    text-align: center;
+    color: var(--white);
+}
+
+
+
+main .chart-data {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-gap: 20px;
+    /* border: 1px solid red; */
+}
+
+main .chart-data .card {
+    padding: 16px;
+    min-width: 300px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+/* MAIN */
+
+
+
+/* CONTENT */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ADD STUDENT */
+.add-student .card {
+    padding: 30px;
+}
+
+.add-student .card .add-student-head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-student .card .add-student-head .icon {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.add-student .card .add-student-form {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.add-student .card .add-student-form input {
+    min-width: 150px;
+}
+
+
+.student-submit button {
+    max-width: 300px;
+    margin: auto;
+    margin-top: 50px !important;
+    background: var(--purple);
+
+}
+
+/* ADD STUDENT */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Excel Add Student */
+#dropzone {
+    font-family: monospace;
+    margin: auto;
+    position: relative;
+    top: 30px;
+    border: 2px dashed #CCC;
+    border-radius: 5px;
+    color: #CCC;
+    height: 100px;
+    width: 60vw;
+    text-align: center;
+}
+
+#dropzone.dragover {
+    border: 2px dashed #000;
+    color: #ccc;
+}
+
+#dropzone.dropped {
+    border: 2px dashed #1ABC9C;
+    color: #1ABC9C;
+}
+
+#dropzone div {
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+}
+
+#dropzone div div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+#dropzone [type="file"] {
+    cursor: pointer;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.pdf,
+.img {
+    font-size: 12px;
+    border-radius: 5px;
+    z-index: 1;
+    height: 40px;
+    width: 40px;
+    margin: 2px;
+    background-color: #EF4836;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+}
+
+
+
+.fileerr {
+    color: #D24D57;
+    float: clear;
+    text-align: center;
+}
+
+.fileok,
+.filesize {
+    text-align: center;
+    line-height: 15px !important;
+    color: #3B7E87;
+    font-size: 16px !important;
+    word-break: break-all;
+    color: #3B7E87;
+}
+
+.filesize {
+    font-size: 14px !important;
+    color: #1F3A93;
+}
+
+/* Excel Add Student */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*ADD Administrative Role*/
+
+.permission-checkbox input {
+    padding: 0;
+    margin: 0 !important;
+}
+
+/*ADD Administrative Role*/
+
+
+
+
+/* Student List  */
+.student-list-edit:hover {
+    background-color: var(--purple) !important;
+    color: var(--white) !important;
+}
+
+/* Student List  */
+
+
+
+/* Factor List */
+
+.factor-list .card {
+    margin-left: 16px;
+    margin-right: 16px;
+    padding-bottom: 15px;
+}
+
+.factor-list-head {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+}
+
+.factor-head-mr-auto {
+    display: flex;
+    justify-content: space-between;
+}
+
+.factor-actions a {
+    color: var(--white) !important;
+}
+
+/* Factor List */
+
+
+
+
+
+/* Create Evaluation */
+
+.create-evaluation .card {
+    padding: 30px;
+}
+
+.create-evaluation-head {
+    margin: auto;
+}
+
+.create-evaluation-form {
+    padding: 15px;
+}
+
+.student-factors {
+    opacity: 0;
+    pointer-events: hidden;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+.teacher-factors {
+    opacity: 0;
+    pointer-events: hidden;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+.parent-factors {
+    opacity: 0;
+    pointer-events: hidden;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+
+.self-factors {
+    opacity: 0;
+    pointer-events: hidden;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+
+.adminstrator-factors {
+    opacity: 0;
+    pointer-events: hidden;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+.evaluation-form-div-show {
+    display: flex;
+    opacity: 1;
+    transition: all 0.5s ease;
+    pointer-events: visible;
+}
+
+/* Create Evaluation */
+
+
+
+
+
+/* Evaluation Form */
+
+.evaluation .card {
+    padding: 30px;
+}
+
+.evaluation-head {
+    margin: auto;
+}
+
+.evaluation-course-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.evaluation-course-details p {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    color: var(--purple);
+}
+
+.evaluation-course-details span {
+    font-weight: 500;
+    color: var(--light-dark);
+}
+
+.stakeholder-evaluation-form {
+    min-width: 350px;
+}
+
+.stakeholder-evaluation-form .evaluation-question {
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+}
+
+.stakeholder-evaluation-form .evaluation-question p {
+    font-size: larger;
+    color: var(--dark);
+}
+
+.stakeholder-evaluation-form .evaluation-question p span {
+    font-weight: 500;
+}
+
+.evaluation-form-message {
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+
+.evaluation-form-message p {
+    font-size: larger;
+    color: var(--dark);
+}
+
+.evaluation-form-submit button {
+    max-width: 300px;
+    margin: auto;
+    margin-top: 50px !important;
+    background: var(--purple);
+}
+
+/* Evaluation Form */
+
+
+/* Add Factor Question */
+
+
+
+/* Add Factor Question */
+
+
+
+
+/* login page */
+
+.contain {
+    height: 100vh;
+    width: 100vw;
+    background: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(../img/16332411_rm347-porpla-02-a-01.jpg);
+    background-size: cover;
+}
+
+.contain .card {
+    height: 42vh;
+    width: 55vw;
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    background: var(--purple);
+}
+
+.contain .card .login-form {
+    width: 40%;
+    height: 100%;
+    background: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.contain .card .login-form .form-padding {
+    width: 80%;
+}
+
+.contain .card .login-form .form-padding>p {
+    font-size: x-large;
+    font-weight: 100;
+}
+
+.login-bg-color {
+    background: var(--purple);
+    color: var(--white);
+
+}
+
+.login-bg-color:hover {
+    background: var(--purple);
+    color: var(--white);
+}
+
+.contain .card .signin-part {
+    width: 60%;
+    height: 100%;
+    padding: 30px;
+    padding-top: 8%;
+}
+
+.contain .card .signin-part p {
+    color: var(--white);
+    font-weight: 300;
+    font-size: large;
+    margin: 0;
+    padding: 0;
+}
+
+.contain .card .signin-part .signin-part-head {
+    font-size: xx-large;
+    font-weight: 400;
+    color: var(--white);
+}
+
+
+
+/* login page */
+
+
+
+/* Register Page */
+
+.contain-register {
+    height: 100vh;
+    width: 100vw;
+    background: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray);
+    background-image: url(../img/16332411_rm347-porpla-02-a-01.jpg);
+    background-size: cover;
+}
+
+.contain-register .card {
+    /* min-height: ;
+    min-width: 600px; */
+    height: 85%;
+    width: 75%;
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    background: var(--purple);
+    
+}
+
+.contain-register .card .signin-form {
+    width: 75%;
+    height: 100%;
+    background: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.contain-register .card .signin-form .form-padding {
+    /* display: flex;
+    flex-direction: column; */
+    width: 80%;
+    
+}
+
+.contain-register .card .signin-form .form-padding label {
+    color: var(--dark);
+    font-weight: 300;
+}
+
+.contain-register .card .login-part {
+    width: 25%;
+    height: 100%;
+    padding: 30px;
+    padding-top: 8%;
+}
+
+.sigin-form-section-header {
+    font-size: larger;
+    color: var(--purple);
+    font-weight: 400;
+
+}
+
+.contain-register .card .signin-form .signin-form-header {
+    font-size: x-large;
+    color: var(--dark);
+    font-weight: 400;
+}
+
+
+
+
+.contain-register .card .login-part p {
+    color: var(--white);
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+}
+
+.contain-register .card .login-part .login-part-head {
+    font-size: xx-large;
+    font-weight: 400;
+    color: var(--white);
+}
+
+/* Register Page */
+
+
+
+/* Admin Dashboard */
+
+.admin-dashboard-head-stat {
+    font-weight: 400 !important;
+    color: var(--dark);
+    transition: all 0.3s ease;
+    animation: fadein 3s;
+
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* .chart-data-admin {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-gap: 20px;
+    border: 1px solid red;
+} */
+
+.chart-data-admin .card {
+    padding: 16px;
+    min-width: 300px;
+    width: 100%;
+    overflow-x: auto;
+    height: 400px;
+    min-height: 400px;
+    min-width: 400px;
+}
+
+
+.chart-data-admin .card .user-activity-card-header{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.chart-data-admin .card .user-activity-card-header p{
+    font-weight: 700;
+    color: var(--dark);
+    font-size: large;
+}
+.all-user-activity-cards{
+    overflow-y:auto
+}
+
+.user-activity-card{
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border: 1px solid red; */
+}
+
+.user-activity-card .first-part{
+    display: flex;
+    align-items: center;
+}
+
+.user-activity-card .first-part .user-activity-card-image{
+    background: #EDF4FF;
+    border-radius: 5px;
+    padding: 5px;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+.user-activity-card .first-part .user-activity-card-image i{
+    font-size: larger;
+    color: var(--purple);
+}
+
+.user-activity-card .first-part .user-activity-card-detail{
+    margin-left: 10px;
+}
+.user-activity-card .first-part .user-activity-card-detail p{
+    margin: 0;
+    padding: 0;
+}
+.user-activity-card .first-part .user-activity-card-detail .header{
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+}
+.user-activity-card .first-part .user-activity-card-detail .subheader{
+    font-size: small;
+    color: var(--dark-gray);
+}
+
+.user-activity-card .time{
+    background: #FFF9ED;
+    padding: 5px;
+    border-radius: 12px;
+}
+
+.user-activity-card .time  p{
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+/* Admin Dashboard */
