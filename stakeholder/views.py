@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from .models import Institution,Student,Parent,Department
+from .models import Institution,Student,Parent,Department,Teacher
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 
@@ -128,7 +128,7 @@ def add_student(request):
 
                 student.save()
 
-                return redirect('add-student')
+                return redirect('student-list')
             if request.method == 'GET':
                 departments = Department.objects.filter(institution = institution[0])
                 context = {
@@ -164,6 +164,34 @@ def add_teacher(request):
         if institution:
             institution_admin = institution[0].institution_admin
             if request.method == 'POST':
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                teacher_id = request.POST.get('teacher_id')
+                designation = request.POST.get('designation')
+                joining_date = request.POST.get('joining_date')
+                gender = request.POST.get('gender')
+                dob = request.POST.get('dob')
+                phone = request.POST.get('phone')
+                department = request.POST.get('department')
+                email = request.POST.get('email')
+                username = request.POST.get('username')
+                password = request.POST.get('password')
+                address = request.POST.get('address')
+                city = request.POST.get('city')
+                state = request.POST.get('state')
+                zipcode = request.POST.get('zipcode')
+
+
+                dept = Department.objects.get(id=department)
+                teacher = Teacher(first_name=first_name,last_name=last_name,teacher_id=teacher_id,designation=designation,joining_date=joining_date,
+                            gender=gender,dob=dob,phone=phone,email=email,address=address,city=city,state=state,zipcode=zipcode,department=dept,
+                            institution=institution[0])
+
+                teacher._teacher_username = username
+                teacher._teacher_password = password
+
+                teacher.save()
+
                 return redirect('add-teacher')
             if request.method == 'GET':
                 departments = Department.objects.filter(institution = institution[0])
@@ -177,3 +205,45 @@ def add_teacher(request):
     else:
         return redirect('login')
 
+
+
+def add_department(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            institution_admin = institution[0].institution_admin
+            if request.method == 'POST':
+                name = request.POST.get('name')
+                dept_head = request.POST.get('head')
+                dept_id = request.POST.get('dept_id')
+                description =request.POST.get('description')
+
+                department = Department(name=name,dept_head=dept_head,dept_id=dept_id,description=description,institution=institution[0])
+                department.save()
+
+                return redirect('department-list')
+            if request.method == 'GET':
+                context = {
+                    'admin' : institution[0].institution_admin,
+                }
+                return render(request,'add_department.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('login')
+
+
+def view_department_list(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            departments = Department.objects.filter(institution=institution[0])
+            context={
+                "departments" : departments,
+                'admin' : institution[0].institution_admin,
+            }
+            return render(request,'department_list.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('login')

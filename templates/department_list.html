@@ -4,32 +4,30 @@
 
 <!-- MAIN -->
 <main>
-    <h1 class="title">Students</h1>
+    <h1 class="title">Departments</h1>
     <ul class="breadcrumbs">
         <li><a href="index.html">Home</a></li>
         <li class="divider">/</li>
-        <li><a href="" class="active">Students</a></li>
+        <li><a href="" class="active">Departments</a></li>
     </ul>
 
 
-    <div class="search-list mst-4">
+    <div class="search-list mb-4">
         <form action="" method="POST">
-            <div class="row mb-4">
-                <div class="col-3">
+            <div class="row mb-3">
+                <div class="col-5">
                     <div class="form-outline bg-white">
-                        <input type="text" id="form6Example1" class="form-control" placeholder="Search by ID ..." />
+                        <input type="text" id="form6Example1" class="form-control"
+                            placeholder="Search by Departemnt ID ..." />
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-5">
                     <div class="form-outline bg-white">
-                        <input type="text" id="form6Example2" class="form-control" placeholder="Search by Name ..." />
+                        <input type="text" id="form6Example2" class="form-control"
+                            placeholder="Search by Departemnt Name ..." />
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="form-outline bg-white">
-                        <input type="text" id="form6Example2" class="form-control" placeholder="Search by Phone ..." />
-                    </div>
-                </div>
+
                 <div class="col-2">
                     <!-- Submit button -->
                     <!-- <div class="student-submit"> -->
@@ -45,12 +43,12 @@
     <div class="add-student">
         <div class="card">
             <div class="add-student-head">
-                <h4 class="text-dark">Students</h4>
+                <h4 class="text-dark">Departments</h4>
 
                 <div>
                     <a href="" class="btn btn-primary bg-color-purple"><i class="fa-solid fa-download"></i>
                         Download</a>
-                    <a href="{% url 'add-student' %}" class="btn btn-primary ms-2 bg-color-purple"><i
+                    <a href="{% url 'add-department' %}" class="btn btn-primary ms-2 bg-color-purple"><i
                             class="fa-solid fa-plus"></i></a>
                 </div>
             </div>
@@ -60,46 +58,28 @@
                     <thead class="bg-light">
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Stuent ID</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Department</th>
+                            <th>Department ID</th>
+                            <th>Department Name</th>
+                            <th>Department Head</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        {% for student in students  %}
+
+                        {% for department in departments%}
                         <tr>
                             <td>{{forloop.counter}}</td>
-
+                            <td>{{department.dept_id}}</td>
+                            <td>{{department.name}}</td>
+                            <td>{{department.dept_head}}</td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="/media/{{student.image}}" alt=""
-                                        style="width: 45px; height: 45px" class="rounded-circle" />
-                                    <div class="ms-3">
-                                        <a href="" class="fw-bold mb-1">{{student.first_name}} {{student.last_name}}</a>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{student.student_id}}</td>
-                            <td>
-                                <p class="fw-normal mb-1">{{student.email}}</p>
-                            </td>
-                            <td>
-                                {{student.phone_number}}
-                            </td>
-                            <td>{{student.department.name}}</td>
-                            <td>
+                                <a href="" class="btn btn-rounded student-list-edit"><i class="fa-solid fa-eye"></i></a>
                                 <a href="" class="btn btn-rounded student-list-edit"><i
                                         class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="" class="btn btn-rounded bg-danger text-white"><i
-                                        class="fa-regular fa-trash-can"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
-                            
 
 
 
@@ -127,6 +107,4 @@
 
 </main>
 
-
-<!-- MAIN -->
 {% endblock %}
