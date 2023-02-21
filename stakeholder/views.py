@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from .models import Institution,Student,Parent,Department,Teacher
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
-
+from .resources import StudentResource
+from tablib import Dataset
 # Create your views here.
 
 
@@ -141,6 +142,53 @@ def add_student(request):
     else:
         return redirect('login')
 
+
+def add_student_excel(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            institution_admin = institution[0].institution_admin
+            if request.method == 'POST':
+                student_resource = StudentResource()
+                dataset = Dataset()
+                new_student = request.FILES['file']
+
+                if not new_student.name.endswith('xlsx'):
+                    return HttpResponse("Wrong Format")
+                
+                imported_data = dataset.load(new_student.read(),format='xlsx')
+                for data in imported_data:
+                    print(data[0])
+                    print(data[1])
+                    print(data[2])
+                    print(data[3])
+                    print(data[4])
+                    print(data[5])
+                    print(data[6])
+                    print(data[7])
+                    print(data[8])
+                    print(data[9])
+                    print(data[10])
+                    print(data[11])
+                    print(data[12])
+                    print(data[13])
+                    print(data[14])
+                    print(data[15])
+                    print(data[16])
+                    print(data[17])
+                    print(data[18])
+                    print(data[19])
+                return render(request,'excel_add_students.html')
+
+            if request.method == 'GET':
+                context = {
+                    'admin' : institution[0].institution_admin,
+                }
+                return render(request,'excel_add_students.html',context)
+        else:
+            return HttpResponse("You are not allowed")
+    else:
+        return redirect('login')
 
 def view_student_list(request):
     if request.user.is_authenticated:
