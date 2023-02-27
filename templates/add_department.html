@@ -19,29 +19,22 @@
             </div>
             <hr>
             <div class="add-student-form">
-                <form action="{% url 'add-department' %}" method="POST">
+                <form action="{% url 'stakeholder:add-department' %}" method="POST">
                     {% csrf_token %}
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4">
-                        <div class="col-4">
+                        <div class="col-6">
                             <label  class="form-label text-dark">Department Name</label>
                             <div class="form-outline">
                                 <input type="text" name="name" class="form-control"
                                     placeholder="Enter Department Name" />
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             <label  class="form-label text-dark">Head of Department</label>
                             <div class="form-outline">
                                 <input type="text" name="head" class="form-control"
                                     placeholder="Enter Head of Department" />
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <label  class="form-label text-dark">Department ID</label>
-                            <div class="form-outline">
-                                <input type="text" name="dept_id" class="form-control"
-                                    placeholder="Enter Departemnt ID" />
                             </div>
                         </div>
                     </div>

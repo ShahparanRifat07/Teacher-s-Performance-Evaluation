@@ -48,7 +48,7 @@
                 <div>
                     <a href="" class="btn btn-primary bg-color-purple"><i class="fa-solid fa-download"></i>
                         Download</a>
-                    <a href="{% url 'add-department' %}" class="btn btn-primary ms-2 bg-color-purple"><i
+                    <a href="{% url 'stakeholder:add-department' %}" class="btn btn-primary ms-2 bg-color-purple"><i
                             class="fa-solid fa-plus"></i></a>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                         {% for department in departments%}
                         <tr>
                             <td>{{forloop.counter}}</td>
-                            <td>{{department.dept_id}}</td>
+                            <td>{{department.pk}}</td>
                             <td>{{department.name}}</td>
                             <td>{{department.dept_head}}</td>
                             <td>

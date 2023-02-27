@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from .resources import StudentResource
 from tablib import Dataset
+from django.urls import reverse
+import traceback
 # Create your views here.
 
 
@@ -33,34 +35,53 @@ def register(request):
 
         institution.save()
 
-        return redirect("login")
+        return redirect("stakeholder:login")
     elif request.method == "GET":
         return render(request, "register.html")
 
-
-
-def dashboard(request):
+def admin_dashboard(request):
     if request.user.is_authenticated:
         user = request.user
-        print(user)
         institution = Institution.objects.filter(institution_admin=user)
         if institution:
-            print(institution)
             context={
                 'admin' : institution[0].institution_admin,
             }
             return render(request,'admin_dashboard.html',context)
         else:
+            return HttpResponse("you are not an admin")
+    else:
+        return redirect('stakeholder:login')
+
+
+def student_dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        student = Student.objects.get(user= user)
+        if student is not None:
+            context = {
+                'student' : student,
+            }
+            return render(request,'student_dashboard.html',context)
+        else:
+            return HttpResponse("You are not a student")
+    else:
+        return redirect('stakeholder:login')
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        institution = Institution.objects.filter(institution_admin=user)
+        if institution:
+            return redirect("stakeholder:admin-dashboard")
+        else:
             student = Student.objects.get(user= user)
             if student is not None:
-                context = {
-                    'student' : student,
-                }
-                return render(request,'student_dashboard.html',context)
+                return redirect("stakeholder:student-dashboard")
             else:
                 pass
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
         
 
 def user_login(request):
@@ -68,24 +89,25 @@ def user_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
+        
         try:
             user = authenticate(username= username,password = password)
             if user is not None:
                 login(request,user)
-                return redirect(dashboard)
+                return dashboard(request)
             else:
-                print("no user found")
-                return redirect("login")
+                print("no user found---method=>user_login")
+                return redirect("stakeholder:login")
         except:
             print("user does not exits==user_login")
-            return redirect("login")
+            return redirect("stakeholder:login")
     elif request.method == "GET":
         return render(request, 'login.html')
 
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('stakeholder:login')
 
 
 def add_student(request):
@@ -129,7 +151,7 @@ def add_student(request):
 
                 student.save()
 
-                return redirect('student-list')
+                return redirect('stakeholder:student-list')
             if request.method == 'GET':
                 departments = Department.objects.filter(institution = institution[0])
                 context = {
@@ -140,7 +162,7 @@ def add_student(request):
         else:
             return HttpResponse("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 
 def add_student_excel(request):
@@ -158,26 +180,22 @@ def add_student_excel(request):
                 
                 imported_data = dataset.load(new_student.read(),format='xlsx')
                 for data in imported_data:
-                    print(data[0])
-                    print(data[1])
-                    print(data[2])
-                    print(data[3])
-                    print(data[4])
-                    print(data[5])
-                    print(data[6])
-                    print(data[7])
-                    print(data[8])
-                    print(data[9])
-                    print(data[10])
-                    print(data[11])
-                    print(data[12])
-                    print(data[13])
-                    print(data[14])
-                    print(data[15])
-                    print(data[16])
-                    print(data[17])
-                    print(data[18])
-                    print(data[19])
+                    # try:
+                        depart = Department.objects.get(id=data[13],institution=institution[0])
+                        student = Student(first_name = data[1],last_name = data[2],student_id =data[3],father_name=data[4],mother_name=data[5],
+                                        gender=data[6],dob=data[7],phone_number=str(data[8]),address=data[9],city=data[10],state=data[11],zipcode=str(data[12]),
+                                        department = depart,email=data[14],institution = institution[0])
+
+                        student._student_username = data[15]
+                        student._student_password = str(data[16])
+                        student._parent_username = data[17]
+                        student._parent_phone_number = str(data[18])
+                        student._parent_password = str(data[19])
+
+                        student.save()
+                    # except:
+                    #     print("print a messege-->add_student_excel")
+                
                 return render(request,'excel_add_students.html')
 
             if request.method == 'GET':
@@ -188,7 +206,7 @@ def add_student_excel(request):
         else:
             return HttpResponse("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 def view_student_list(request):
     if request.user.is_authenticated:
@@ -203,7 +221,7 @@ def view_student_list(request):
         else:
             return HttpResponse("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 
 def add_teacher(request):
@@ -240,7 +258,7 @@ def add_teacher(request):
 
                 teacher.save()
 
-                return redirect('add-teacher')
+                return redirect('stakeholder:teacher-list')
             if request.method == 'GET':
                 departments = Department.objects.filter(institution = institution[0])
                 context = {
@@ -251,7 +269,7 @@ def add_teacher(request):
         else:
             raise PermissionDenied("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 
 
@@ -268,7 +286,7 @@ def view_teacher_list(request):
         else:
             raise PermissionDenied("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 
 
@@ -281,13 +299,12 @@ def add_department(request):
             if request.method == 'POST':
                 name = request.POST.get('name')
                 dept_head = request.POST.get('head')
-                dept_id = request.POST.get('dept_id')
                 description =request.POST.get('description')
 
-                department = Department(name=name,dept_head=dept_head,dept_id=dept_id,description=description,institution=institution[0])
+                department = Department(name=name,dept_head=dept_head,description=description,institution=institution[0])
                 department.save()
 
-                return redirect('department-list')
+                return redirect('stakeholder:department-list')
             if request.method == 'GET':
                 context = {
                     'admin' : institution[0].institution_admin,
@@ -296,7 +313,7 @@ def add_department(request):
         else:
             raise PermissionDenied("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')
 
 
 
@@ -314,4 +331,4 @@ def view_department_list(request):
         else:
             raise PermissionDenied("You are not allowed")
     else:
-        return redirect('login')
+        return redirect('stakeholder:login')

@@ -22,7 +22,7 @@
             </div>
             <hr>
             <div class="add-student-form">
-                <form action="{% url 'add-teacher' %}" method="POST">
+                <form action="{% url 'stakeholder:add-teacher' %}" method="POST">
                     {% csrf_token %}
                     <h5 class="text-dark mb-4">Basic Details:</h5>
                     <!-- 3 column grid layout with text inputs for the first and last names -->

@@ -1,6 +1,7 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from stakeholder.models import Institution, Student, Parent,Teacher
+from evaluation.models import StakeholderTag,InstitutionTag,Factor,Question
 from django.contrib.auth.models import User
 from nameparser import HumanName
 
@@ -8,6 +9,7 @@ from nameparser import HumanName
 @receiver(pre_save, sender=Institution)
 def create_admin_for_institution(sender, instance, *args, **kwargs):
     if instance.id is None:
+        #creating admin for institution
         username = instance._username
         full_name = instance._full_name
         email = instance._email
@@ -22,6 +24,12 @@ def create_admin_for_institution(sender, instance, *args, **kwargs):
         user.save()
 
         instance.institution_admin = user
+
+
+        #creating factors for institutions
+
+        
+        
 
 
 @receiver(pre_save, sender=Student)

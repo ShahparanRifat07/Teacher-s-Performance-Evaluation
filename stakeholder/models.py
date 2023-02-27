@@ -11,6 +11,9 @@ GENDER_CHOICE = (
     ("3", "Others"),
 )
 
+
+
+
 class Institution(models.Model):
     institution_name = models.CharField(max_length=128)
     institution_code = models.CharField(max_length=11)
@@ -45,12 +48,13 @@ class Institution(models.Model):
 class Department(models.Model):
     name = models.CharField(max_length=128)
     dept_head = models.CharField(max_length=64)
-    dept_id = models.CharField(max_length=11)
     description = models.TextField(null=True,blank=True)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.name
+
+
 
 
 class Student(models.Model):

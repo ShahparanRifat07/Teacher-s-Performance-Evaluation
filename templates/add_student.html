@@ -16,13 +16,13 @@
         <div class="card">
             <div class="add-student-head">
                 <h4 class="text-dark">Student Information</h4>
-                <a href="{% url 'add-student-excel' %}" class="btn btn-success"><i class="fa-solid fa-file-excel icon"></i>
+                <a href="{% url 'stakeholder:add-student-excel' %}" class="btn btn-success"><i class="fa-solid fa-file-excel icon"></i>
                     Add Studnts Using
                     XLS</a>
             </div>
             <hr>
             <div class="add-student-form">
-                <form action="" method="POST">
+                <form action="{% url 'stakeholder:add-student' %}" method="POST">
 
                     {% csrf_token %}
                     <h5 class="text-dark mb-4">Basic Details:</h5>
