@@ -8,6 +8,7 @@ from .resources import StudentResource
 from tablib import Dataset
 from django.urls import reverse
 import traceback
+from django.db import transaction
 # Create your views here.
 
 
@@ -179,22 +180,20 @@ def add_student_excel(request):
                     return HttpResponse("Wrong Format")
                 
                 imported_data = dataset.load(new_student.read(),format='xlsx')
-                for data in imported_data:
-                    # try:
-                        depart = Department.objects.get(id=data[13],institution=institution[0])
-                        student = Student(first_name = data[1],last_name = data[2],student_id =data[3],father_name=data[4],mother_name=data[5],
-                                        gender=data[6],dob=data[7],phone_number=str(data[8]),address=data[9],city=data[10],state=data[11],zipcode=str(data[12]),
-                                        department = depart,email=data[14],institution = institution[0])
+                with transaction.atomic():
+                    for data in imported_data:
+                            depart = Department.objects.get(id=data[13],institution=institution[0])
+                            student = Student(first_name = data[1],last_name = data[2],student_id =data[3],father_name=data[4],mother_name=data[5],
+                                            gender=data[6],dob=data[7],phone_number=str(data[8]),address=data[9],city=data[10],state=data[11],zipcode=str(data[12]),
+                                            department = depart,email=data[14],institution = institution[0])
 
-                        student._student_username = data[15]
-                        student._student_password = str(data[16])
-                        student._parent_username = data[17]
-                        student._parent_phone_number = str(data[18])
-                        student._parent_password = str(data[19])
+                            student._student_username = data[15]
+                            student._student_password = str(data[16])
+                            student._parent_username = data[17]
+                            student._parent_phone_number = str(data[18])
+                            student._parent_password = str(data[19])
 
-                        student.save()
-                    # except:
-                    #     print("print a messege-->add_student_excel")
+                            student.save()
                 
                 return render(request,'excel_add_students.html')
 

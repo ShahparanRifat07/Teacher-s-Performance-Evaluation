@@ -30,8 +30,9 @@ class Factor(models.Model):
 
 class Question(models.Model):
     question = models.TextField()
+    stakeholder_tag = models.ManyToManyField(StakeholderTag)
     factor = models.ForeignKey(Factor, on_delete=models.CASCADE)
-    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
+    # institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.question
