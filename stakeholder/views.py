@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from .models import Institution,Student,Parent,Department,Teacher
-from django.http import HttpResponse
+from .models import Institution,Student,Parent,Department,Teacher,Course
+from django.http import HttpResponse, FileResponse
 from django.core.exceptions import PermissionDenied
 from .resources import StudentResource
 from tablib import Dataset
 from django.urls import reverse
 import traceback
+import os
 from django.db import transaction
+from core.settings import BASE_DIR
 # Create your views here.
 
 
@@ -206,6 +208,19 @@ def add_student_excel(request):
             return HttpResponse("You are not allowed")
     else:
         return redirect('stakeholder:login')
+    
+
+
+def download_student_excel(request):
+    file_path = BASE_DIR / 'static/file/student_upload_template.xlsx'
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as excel:
+            data = excel.read()
+
+        response = HttpResponse(data,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=add_student.xlsx'
+        return response
+    
 
 def view_student_list(request):
     if request.user.is_authenticated:
@@ -327,6 +342,31 @@ def view_department_list(request):
                 'admin' : institution[0].institution_admin,
             }
             return render(request,'department_list.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+    
+
+
+def add_course(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            if request.method == 'POST':
+                id = request.POST.get('course_id')
+                name = request.POST.get('course_name')
+                section =request.POST.get('course_section')
+
+                course = Course(course_id = id, course_name = name, section = section,institution = institution[0])
+                course.save()
+
+                return redirect('stakeholder:add-course')
+            if request.method == 'GET':
+                context = {
+                    'admin' : institution[0].institution_admin,
+                }
+                return render(request,'add_course.html',context)
         else:
             raise PermissionDenied("You are not allowed")
     else:

@@ -11,14 +11,19 @@ GENDER_CHOICE = (
     ("3", "Others"),
 )
 
-
+INSTITUTION_TYPE = (
+    ("1","Primary"),
+    ("2","Secondary"),
+    ("3","Tertiary"),
+    ("4","Other"),
+)
 
 
 class Institution(models.Model):
     institution_name = models.CharField(max_length=128)
     institution_code = models.CharField(max_length=11)
     established_year = models.CharField(max_length=4)
-    institution_type = models.PositiveIntegerField()
+    institution_type = models.CharField(max_length = 1, choices = INSTITUTION_TYPE)
     institution_head = models.CharField(max_length=64)
     location = models.CharField(max_length=128)
     institution_admin = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -147,5 +152,17 @@ class Teacher(models.Model):
     def __str__(self):
         return self.first_name+" "+self.last_name
 
+
+
+class Course(models.Model):
+    course_id = models.CharField(max_length=16)
+    course_name = models.CharField(max_length=128)
+    section = models.CharField(max_length=2)
+    course_teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL,null=True)
+    course_students = models.ManyToManyField(Student)
+    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.course_name
 
         

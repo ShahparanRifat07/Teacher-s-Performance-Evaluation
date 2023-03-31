@@ -31,6 +31,7 @@ class Factor(models.Model):
 class Question(models.Model):
     question = models.TextField()
     stakeholder_tag = models.ManyToManyField(StakeholderTag)
+    institution_tag = models.ManyToManyField(InstitutionTag)
     factor = models.ForeignKey(Factor, on_delete=models.CASCADE)
     # institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
 
