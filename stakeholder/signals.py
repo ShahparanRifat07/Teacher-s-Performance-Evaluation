@@ -69,9 +69,9 @@ def create_user_for_student(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=Student)
 def create_post_save_parent_for_student(sender, instance, created, *args, **kwargs):
     if created:
-        parents_username = instance._parent_username
-        phone_number = instance._parent_phone_number
-        password = instance._parent_password
+        parents_username = instance.parent_username
+        phone_number = instance.parent_phone_number
+        password = instance.parent_password
 
         user = User(username=parents_username)
         user.set_password(password)

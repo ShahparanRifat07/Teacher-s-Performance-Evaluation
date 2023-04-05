@@ -56,9 +56,9 @@
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
                     <li><a href="administrator_list.html">Administrator List</a></li>
-                    <li><a href="add_administraor.html">Add Administrator</a></li>
+                    <li><a href="{% url 'stakeholder:add-administrator' %}">Add Administrator</a></li>
                     <li><a href="administrative_role_list.html">Administrative Role List</a></li>
-                    <li><a href="add_administrative_role.html">Add Administrative Role</a></li>
+                    <li><a href="{% url 'stakeholder:add-administrative-role' %}">Add Administrative Role</a></li>
 
                 </ul>
             </li>
@@ -89,7 +89,7 @@
                 <a href=""><i class="fa-solid fa-list-check icon"></i>Evaluation
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="">Evaluation Factors</a></li>
+                    <li><a href="{% url 'evaluation:factor-list' %}">Evaluation Factors</a></li>
                     <li><a href="">Draft List</a></li>
                     <li><a href="">Create Evaluation</a></li>
                 </ul>

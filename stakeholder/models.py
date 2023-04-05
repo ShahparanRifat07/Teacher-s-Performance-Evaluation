@@ -151,6 +151,38 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.first_name+" "+self.last_name
+    
+
+class AdministrativeRole(models.Model):
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+class Administrator(models.Model):
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    administrative_id = models.CharField(max_length=64)
+    phone = models.CharField(max_length=15)
+    role = models.ForeignKey(AdministrativeRole, on_delete=models.CASCADE)
+    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
+
+    @property
+    def administrator_username(self):
+        return self._administrator_username
+    
+    @property
+    def administrator_password(self):
+        return self._administrator_password
+    
+    @property
+    def administrator_email(self):
+        return self._administrator_email
+    
+    def __str__(self):
+        return self.first_name+" "+self.last_name
 
 
 

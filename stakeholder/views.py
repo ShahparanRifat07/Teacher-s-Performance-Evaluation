@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from .models import Institution,Student,Parent,Department,Teacher,Course
+from .models import Institution,Student,Parent,Department,Teacher,Course,AdministrativeRole,Administrator
 from django.http import HttpResponse, FileResponse
 from django.core.exceptions import PermissionDenied
 from .resources import StudentResource
@@ -11,6 +11,7 @@ import traceback
 import os
 from django.db import transaction
 from core.settings import BASE_DIR
+from .utility import valided_add_student_form
 # Create your views here.
 
 
@@ -70,19 +71,76 @@ def student_dashboard(request):
             return HttpResponse("You are not a student")
     else:
         return redirect('stakeholder:login')
+    
+
+def parent_dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        parent = Parent.objects.get(user= user)
+        if parent is not None:
+            context = {
+                'parent' : parent,
+            }
+            return render(request,'parent_dashboard.html',context)
+        else:
+            return HttpResponse("You are not a Parent")
+    else:
+        return redirect('stakeholder:login')
+    
+def teacher_dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        teacher = Teacher.objects.get(user= user)
+        if teacher is not None:
+            context = {
+                'teacher' : teacher,
+            }
+            return render(request,'teacher_dashboard.html',context)
+        else:
+            return HttpResponse("You are not a Teacher")
+    else:
+        return redirect('stakeholder:login')
+    
+
+def administrator_dashboard(request):
+    if request.user.is_authenticated:
+        user = request.user
+        administrator = Administrator.objects.get(user= user)
+        if administrator is not None:
+            context = {
+                'administrator' : administrator,
+            }
+            return render(request,'administrator_dashboard.html',context)
+        else:
+            return HttpResponse("You are not a Administrator")
+    else:
+        return redirect('stakeholder:login')
 
 def dashboard(request):
     if request.user.is_authenticated:
         user = request.user
-        institution = Institution.objects.filter(institution_admin=user)
-        if institution:
+        institution_admin = Institution.objects.filter(institution_admin=user)
+        if institution_admin:
             return redirect("stakeholder:admin-dashboard")
         else:
-            student = Student.objects.get(user= user)
+            student = Student.objects.filter(user= user).first()
+            print(student)
             if student is not None:
                 return redirect("stakeholder:student-dashboard")
             else:
-                pass
+                parent = Parent.objects.filter(user= user).first()
+                if parent is not None:
+                    return redirect("stakeholder:parent-dashboard")
+                else:
+                    teacher = Teacher.objects.filter(user= user).first()
+                    if teacher is not None:
+                        return redirect("stakeholder:teacher-dashboard")
+                    else:
+                        administrator = Administrator.objects.filter(user= user).first()
+                        if administrator is not None:
+                            return redirect("stakeholder:administrator-dashboard")
+                        else:
+                            return redirect('stakeholder:login')
     else:
         return redirect('stakeholder:login')
         
@@ -91,10 +149,9 @@ def user_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-
-        
         try:
             user = authenticate(username= username,password = password)
+
             if user is not None:
                 login(request,user)
                 return dashboard(request)
@@ -113,6 +170,15 @@ def user_logout(request):
     return redirect('stakeholder:login')
 
 
+
+
+
+
+
+
+
+
+#Student
 def add_student(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)
@@ -138,6 +204,11 @@ def add_student(request):
                 city = request.POST.get('city')
                 state = request.POST.get('state')
                 zipcode = request.POST.get('zipcode')
+
+
+                valided_add_student_form(first_name,last_name,student_id,father_name,mother_name,gender,dob,phone,
+                                         department,student_username,student_password,email,parent_username,
+                                         parent_password,parent_phone)
 
 
                 dept = Department.objects.get(id=department)
@@ -238,6 +309,11 @@ def view_student_list(request):
         return redirect('stakeholder:login')
 
 
+
+
+
+
+#Teacher
 def add_teacher(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)
@@ -305,6 +381,21 @@ def view_teacher_list(request):
 
 
 
+
+#Administrator
+
+def add_administrative_role(request):
+    return render(request, 'add_administrative_role.html')
+
+
+def add_administrator(request):
+    return render(request, 'add_administrator.html')
+
+
+
+
+
+#Department
 def add_department(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)
@@ -349,6 +440,16 @@ def view_department_list(request):
     
 
 
+
+
+
+
+
+
+
+
+
+#Course
 def add_course(request):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user)

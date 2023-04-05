@@ -3,6 +3,27 @@ from evaluation.models import StakeholderTag,InstitutionTag,Factor,Question
 from django.db import transaction
 
 
+
+
+
+
+def valided_add_student_form(first_name,last_name,student_id,father_name,mother_name,gender,dob,phone,department,student_username,student_password,email,parent_username,parent_password,parent_phone,*args, **kwargs):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def save_factors_for_institutions(instance, *args, **kwargs):
 
     #creating factors for institutions
@@ -642,7 +663,6 @@ def save_factors_for_institutions(instance, *args, **kwargs):
 
     elif instance.institution_type == other_institution:
         pass
-
 
 
 

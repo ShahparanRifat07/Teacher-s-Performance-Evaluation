@@ -6,9 +6,9 @@
 <main>
     <h1 class="title">Departments</h1>
     <ul class="breadcrumbs">
-        <li><a href="index.html">Home</a></li>
+        <li><a href="{% url 'stakeholder:dashboard' %}">Home</a></li>
         <li class="divider">/</li>
-        <li><a href="" class="active">Departments</a></li>
+        <li><a href="{% url 'stakeholder:department-list' %}" class="active">Departments</a></li>
     </ul>
 
 

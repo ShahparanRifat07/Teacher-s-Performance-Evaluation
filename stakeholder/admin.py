@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Institution,Student,Parent,Department,Teacher,Course
+from .models import Institution,Student,Parent,Department,Teacher,Course,AdministrativeRole,Administrator
 from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
@@ -14,4 +14,6 @@ admin.site.register(Institution)
 admin.site.register(Parent)
 admin.site.register(Department)
 admin.site.register(Teacher)
+admin.site.register(Administrator)
+admin.site.register(AdministrativeRole)
 admin.site.register(Course)
