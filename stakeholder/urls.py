@@ -2,8 +2,10 @@ from django.urls import path
 from .views import (register,user_login,add_student,dashboard,user_logout,view_student_list,add_teacher,
                     add_department,view_department_list,view_teacher_list,add_student_excel,
                     admin_dashboard,student_dashboard,parent_dashboard,teacher_dashboard,administrator_dashboard,
-                    download_student_excel,add_course,
-                    add_administrative_role,add_administrator)
+                    download_student_excel,
+                    add_course,course_list,
+                    add_administrator,
+                    assign_course_to_student,assign_course_to_teacher,student_list_json,student_list_all_json,assign_student)
 
 app_name ='stakeholder'
 urlpatterns = [
@@ -24,8 +26,13 @@ urlpatterns = [
     path('institution/teacher-list/',view_teacher_list,name="teacher-list"),
     path('institution/add-department/',add_department,name="add-department"),
     path('institution/department-list/',view_department_list,name="department-list"),
-    path('institution/add-course/',add_course,name="add-course"),
-
-    path('institution/add-administrative-role/',add_administrative_role,name="add-administrative-role"),
     path('institution/add-administrator/',add_administrator,name="add-administrator"),
+
+    #course
+    path('institution/add-course/',add_course,name="add-course"),
+    path('institution/course-list/',course_list,name="course-list"),
+    path('institution/course/<int:id>/assign-course-to-student/',assign_course_to_student,name="assign-course-student"),
+    path('institution/course/<int:cid>/assign-student/<int:sid>',assign_student,name="assign-student"),
+    path('api/institution/student-list/<str:name>',student_list_json,name="student-list-json"),
+    path('api/institution/student-list/',student_list_all_json,name="student-list-all-json"),
 ]

@@ -1,6 +1,6 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from stakeholder.models import Institution, Student, Parent,Teacher
+from stakeholder.models import Institution, Student, Parent,Teacher,Administrator
 from evaluation.models import StakeholderTag,InstitutionTag,Factor,Question
 from django.contrib.auth.models import User
 from nameparser import HumanName
@@ -91,6 +91,24 @@ def create_user_for_teacher(sender, instance, *args, **kwargs):
         password = instance._teacher_password
 
         user = User(username=username, first_name=first_name, last_name=last_name, email = email)
+        user.set_password(password)
+        user.save()
+
+        instance.user = user
+
+
+
+@receiver(pre_save, sender=Administrator)
+def create_user_for_administrator(sender, instance, *args, **kwargs):
+    if instance.id is None:
+        #creating user for institution
+        username = instance._administrator_username
+        email = instance._administrator_email
+        password = instance._administrator_password
+        first_name = instance.first_name
+        last_name = instance.last_name
+
+        user = User(username=username, first_name=first_name, last_name=last_name, email=email)
         user.set_password(password)
         user.save()
 

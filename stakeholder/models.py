@@ -113,6 +113,7 @@ class Parent(models.Model):
     phone_number = models.CharField(max_length=11)
     student = models.OneToOneField(Student,on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='Profile_Picture', default='default.jpg')
 
     def __str__(self):
         return self.user.username
@@ -153,21 +154,15 @@ class Teacher(models.Model):
         return self.first_name+" "+self.last_name
     
 
-class AdministrativeRole(models.Model):
-    title = models.CharField(max_length=128)
-    description = models.TextField()
-    institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
-
 class Administrator(models.Model):
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
-    administrative_id = models.CharField(max_length=64)
-    phone = models.CharField(max_length=15)
-    role = models.ForeignKey(AdministrativeRole, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=64,null=True,blank=True)
+    last_name = models.CharField(max_length=64,null=True,blank=True)
+    administrative_id = models.CharField(max_length=64,null=True,blank=True)
+    role = models.CharField(max_length=128,null=True,blank=True)
+    phone = models.CharField(max_length=15,null=True,blank=True)
     institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
+    image = models.ImageField(upload_to='Profile_Picture', default='default.jpg')
 
     @property
     def administrator_username(self):
@@ -180,6 +175,30 @@ class Administrator(models.Model):
     @property
     def administrator_email(self):
         return self._administrator_email
+    
+    @property
+    def add_teacher(self):
+        return self._add_teacher
+    
+    @property
+    def add_student(self):
+        return self._add_student
+    
+    @property
+    def add_course(self):
+        return self._add_course
+    
+    @property
+    def edit_teacher(self):
+        return self._edit_teacher
+    
+    @property
+    def edit_student(self):
+        return self._edit_student
+    
+    @property
+    def edit_course(self):
+        return self._edit_course
     
     def __str__(self):
         return self.first_name+" "+self.last_name

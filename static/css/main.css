@@ -32,6 +32,9 @@ li {
     list-style: none;
 }
 
+.text-color-purple{
+    color: var(--purple) !important;
+}
 
 .bg-color-purple {
     background: var(--purple);

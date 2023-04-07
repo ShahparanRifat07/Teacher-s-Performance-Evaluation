@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from .models import Institution,Student,Parent,Department,Teacher,Course,AdministrativeRole,Administrator
-from django.http import HttpResponse, FileResponse
+from .models import Institution,Student,Parent,Department,Teacher,Course,Administrator
+from django.http import HttpResponse, FileResponse, HttpResponseNotFound
 from django.core.exceptions import PermissionDenied
 from .resources import StudentResource
 from tablib import Dataset
@@ -12,6 +12,8 @@ import os
 from django.db import transaction
 from core.settings import BASE_DIR
 from .utility import valided_add_student_form
+from django.core import serializers
+from django.db.models import Q
 # Create your views here.
 
 
@@ -168,13 +170,6 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('stakeholder:login')
-
-
-
-
-
-
-
 
 
 
@@ -384,13 +379,50 @@ def view_teacher_list(request):
 
 #Administrator
 
-def add_administrative_role(request):
-    return render(request, 'add_administrative_role.html')
-
-
 def add_administrator(request):
-    return render(request, 'add_administrator.html')
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            if request.method == 'POST':
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                id = request.POST.get('id')
+                phone = request.POST.get('phone')
+                role =request.POST.get('role')
+                email = request.POST.get('email')
+                username = request.POST.get('username')
+                password = request.POST.get('password')
+                add_teacher = request.POST.get('add-teacher')
+                add_student = request.POST.get('add-student')
+                add_course = request.POST.get('add-course')
+                edit_teacher = request.POST.get('edit-teacher')
+                edit_student = request.POST.get('edit-student')
+                edit_course = request.POST.get('edit-course')
 
+
+                administrator = Administrator(first_name=first_name,last_name=last_name,administrative_id = id,role=role,phone=phone,institution=institution)
+                administrator._administrator_username = username
+                administrator._administrator_password = password
+                administrator._administrator_email = email
+                administrator._add_teacher = add_teacher
+                administrator._add_student = add_student
+                administrator._add_course = add_course
+                administrator._edit_teacher = edit_teacher
+                administrator._edit_student = edit_student
+                administrator._edit_course = edit_course
+
+                administrator.save()
+                
+                return redirect('stakeholder:add-administrator')
+            if request.method == 'GET':
+                context = {
+                    'admin' : institution.institution_admin,
+                }
+                return render(request,'add_administrator.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
 
 
 
@@ -462,7 +494,7 @@ def add_course(request):
                 course = Course(course_id = id, course_name = name, section = section,institution = institution[0])
                 course.save()
 
-                return redirect('stakeholder:add-course')
+                return redirect('stakeholder:course-list')
             if request.method == 'GET':
                 context = {
                     'admin' : institution[0].institution_admin,
@@ -472,3 +504,90 @@ def add_course(request):
             raise PermissionDenied("You are not allowed")
     else:
         return redirect('stakeholder:login')
+
+
+def course_list(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            courses = Course.objects.filter(institution=institution)
+            context={
+                "courses" : courses,
+                'admin' : institution.institution_admin,
+            }
+            return render(request,'course_list.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+
+def assign_course_to_student(request,id):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            try:
+                course = Course.objects.get(id = id)
+            except:
+                return HttpResponseNotFound("Not found")
+            students = Student.objects.filter(institution=institution)
+            if request.method == 'GET':
+                context = {
+                    'course' : course,
+                    'students' : students,
+                    'admin' : institution.institution_admin,
+                }
+                return render(request,'assign_student.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+
+def assign_student(request,cid,sid):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            try:
+                course = Course.objects.get(id = id)
+                student = Student.objects.get(id = sid)
+            except:
+                return HttpResponseNotFound("Not found")
+            if student.course_set.filter(pk=course.pk).exists():
+                return  HttpResponse("can not add course...already assigned")
+            else:
+                course.course_students.add(student)
+                return redirect('stakeholder:course-list')
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+    
+
+def assign_course_to_teacher(request):
+    pass
+
+
+
+def student_list_json(request,name):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            qs = Student.objects.filter(institution=institution).filter(Q(first_name__contains=name) | Q(last_name__contains = name))
+            qs_json = serializers.serialize('json', qs)
+            return HttpResponse(qs_json, content_type='application/json')
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+    
+def student_list_all_json(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            qs = Student.objects.filter(institution=institution)
+            qs_json = serializers.serialize('json', qs)
+            return HttpResponse(qs_json, content_type='application/json')
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+    

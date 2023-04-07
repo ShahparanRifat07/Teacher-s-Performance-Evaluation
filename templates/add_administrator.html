@@ -21,8 +21,9 @@
                     </div>
                     <hr>
                     <div class="add-student-form">
-                        <form  action="" method="POST">
+                        <form  action="{% url 'stakeholder:add-administrator' %}" method="POST">
 
+                            {% csrf_token %}
 
                             <h5 class="text-dark mb-4">Basic Details:</h5>
                             <!-- 3 column grid layout with text inputs for the first and last names -->
@@ -30,19 +31,19 @@
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">First Name</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example1" class="form-control" placeholder="Enter FirstName"/>
+                                        <input type="text" id="form6Example1" class="form-control" name="first_name" placeholder="Enter FirstName"/>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Last Name</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example2" class="form-control" placeholder="Enter LastName"/>
+                                        <input type="text" id="form6Example2" class="form-control" name="last_name" placeholder="Enter LastName"/>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Administrator ID</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example2" class="form-control" placeholder="Enter Administrative ID"/>
+                                        <input type="text" id="form6Example2" class="form-control" name="id" placeholder="Enter Administrative ID"/>
                                     </div>
                                 </div>
                             </div>
@@ -53,17 +54,14 @@
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Phone Number</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example2" class="form-control" placeholder="Enter Phone Number" />
+                                        <input type="text" id="form6Example2" class="form-control" name="phone" placeholder="Enter Phone Number" />
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Role</label>
-                                        <select class="form-select form-select" aria-label=".form-select-sm example">
-                                            <option selected disabled>Select Role</option>
-                                            <option value="1">Register</option>
-                                            <option value="2">Course Cordinator</option>
-                                            <option value="3">Exam Controller</option>
-                                        </select>
+                                    <div class="form-outline">
+                                        <input type="text" id="form6Example2" class="form-control" name="role" placeholder="Enter Administrative Role" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -75,22 +73,63 @@
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Username</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example1" class="form-control" placeholder="Enter Username"/>
+                                        <input type="text" id="form6Example1" class="form-control" name="username" placeholder="Enter Username"/>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Email</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example2" class="form-control" placeholder="Enter Email Address"/>
+                                        <input type="email" id="form6Example2" class="form-control" name="email" placeholder="Enter Email Address"/>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <label for="exampleInputEmail1" class="form-label text-dark">Password</label>
                                     <div class="form-outline">
-                                        <input type="text" id="form6Example2" class="form-control" placeholder="Enter Password"/>
+                                        <input type="password" id="form6Example2" class="form-control" name="password" placeholder="Enter Password"/>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4">
+                        <h5 class="text-dark mb-4 mt-4">Permissions:</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="add-teacher">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Add Teacher</label>
+                            </div>
+
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="add-student">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Add Students</label>
+                            </div>
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="add-course">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Add Courses</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="edit-teacher">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Edit/Delete
+                                    Teacher</label>
+                            </div>
+
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="edit-student">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Edit/Delete
+                                    Student</label>
+                            </div>
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault" name="edit-course">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Can Edit/Delete
+                                    Course</label>
+                            </div>
+                        </div>
+
+                    </div>
+
 
 
                             <!-- Submit button -->

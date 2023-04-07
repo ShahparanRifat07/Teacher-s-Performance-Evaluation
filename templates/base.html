@@ -57,9 +57,6 @@
                 <ul class="side-dropdown">
                     <li><a href="administrator_list.html">Administrator List</a></li>
                     <li><a href="{% url 'stakeholder:add-administrator' %}">Add Administrator</a></li>
-                    <li><a href="administrative_role_list.html">Administrative Role List</a></li>
-                    <li><a href="{% url 'stakeholder:add-administrative-role' %}">Add Administrative Role</a></li>
-
                 </ul>
             </li>
 
@@ -77,7 +74,7 @@
                 <a href=""><i class="fas fa-book-reader icon"></i>Courses
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="">Course List</a></li>
+                    <li><a href="{% url 'stakeholder:course-list' %}">Course List</a></li>
                     <li><a href="{% url 'stakeholder:add-course' %}">Add Course</a></li>
                     <li><a href="">Assign Course to Teachers</a></li>
                     <li><a href="">Assign Course to Students</a></li>
@@ -131,13 +128,17 @@
                 <img src="https://www.leisureopportunities.co.uk/images/995586_746594.jpg" alt="" />
                 <ul class="profile-link">
                     <li>
+                        {% if request.user.first_name %}
+                        <a href=""><i class="bx bxs-user-circle icon"></i>{{request.user.first_name}}
+                            {{request.user.last_name}}</a>
+                        {% else %}
                         <a href=""><i class="bx bxs-user-circle icon"></i>Profile</a>
+                        {% endif %}
+
                     </li>
                     <li>
-                        <a href=""><i class="bx bxs-user-circle icon"></i>Profile</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'stakeholder:logout' %}"><i class="bx bxs-user-circle icon"></i>Logout</a>
+                        <a href="{% url 'stakeholder:logout' %}"><i
+                                class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a>
                     </li>
                 </ul>
             </div>
@@ -163,6 +164,9 @@
 
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    {% block assign_student %}
+    {% endblock %}
 </body>
 
 </html>

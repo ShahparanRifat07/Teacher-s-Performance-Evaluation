@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from stakeholder.models import Institution,Student,Parent,Department,Teacher,Course,AdministrativeRole,Administrator
+from stakeholder.models import Institution,Student,Parent,Department,Teacher,Course,Administrator
 from .models import Factor,StakeholderTag,Question,InstitutionTag
 from django.core.exceptions import PermissionDenied
 # Create your views here.
