@@ -210,7 +210,7 @@ class Course(models.Model):
     course_name = models.CharField(max_length=128)
     section = models.CharField(max_length=2)
     course_teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL,null=True)
-    course_students = models.ManyToManyField(Student)
+    course_students = models.ManyToManyField(Student, related_name='course_students')
     institution = models.ForeignKey(Institution,on_delete=models.CASCADE)
 
     def __str__(self):

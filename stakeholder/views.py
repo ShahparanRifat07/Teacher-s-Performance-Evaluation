@@ -50,7 +50,9 @@ def admin_dashboard(request):
         user = request.user
         institution = Institution.objects.filter(institution_admin=user)
         if institution:
+            student_number = Student.objects.all().count()
             context={
+                'student_number' : student_number,
                 'admin' : institution[0].institution_admin,
             }
             return render(request,'admin_dashboard.html',context)
@@ -475,12 +477,6 @@ def view_department_list(request):
 
 
 
-
-
-
-
-
-
 #Course
 def add_course(request):
     if request.user.is_authenticated:
@@ -521,19 +517,21 @@ def course_list(request):
     else:
         return redirect('stakeholder:login')
 
-def assign_course_to_student(request,id):
+def assign_course_to_student(request,cid):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user).first()
         if institution:
             try:
-                course = Course.objects.get(id = id)
+                course = Course.objects.get(id = cid)
+                enrolled_students = course.course_students.all()
+                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
             except:
                 return HttpResponseNotFound("Not found")
             students = Student.objects.filter(institution=institution)
             if request.method == 'GET':
                 context = {
                     'course' : course,
-                    'students' : students,
+                    'students' : unenrolled_students,
                     'admin' : institution.institution_admin,
                 }
                 return render(request,'assign_student.html',context)
@@ -547,7 +545,7 @@ def assign_student(request,cid,sid):
         institution = Institution.objects.filter(institution_admin=request.user).first()
         if institution:
             try:
-                course = Course.objects.get(id = id)
+                course = Course.objects.get(id = cid)
                 student = Student.objects.get(id = sid)
             except:
                 return HttpResponseNotFound("Not found")
@@ -562,30 +560,91 @@ def assign_student(request,cid,sid):
         return redirect('stakeholder:login')
     
 
-def assign_course_to_teacher(request):
-    pass
-
-
-
-def student_list_json(request,name):
+def assign_course_to_teacher(request,cid):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user).first()
         if institution:
-            qs = Student.objects.filter(institution=institution).filter(Q(first_name__contains=name) | Q(last_name__contains = name))
-            qs_json = serializers.serialize('json', qs)
-            return HttpResponse(qs_json, content_type='application/json')
+            try:
+                course = Course.objects.get(id = cid)
+            except:
+                return HttpResponseNotFound("Not found")
+            if course.course_teacher is None:
+                teachers = Teacher.objects.filter(institution = institution)
+            else:
+                teachers = Teacher.objects.filter(institution = institution).exclude(pk = course.course_teacher.pk)
+
+            if request.method == 'GET':
+                context = {
+                    'course' : course,
+                    'teachers' : teachers,
+                    'admin' : institution.institution_admin,
+                }
+                return render(request,'assign_teacher.html',context)
         else:
             raise PermissionDenied("You are not allowed")
     else:
         return redirect('stakeholder:login')
     
-def student_list_all_json(request):
+
+
+def assign_teacher(request,cid,tid):
     if request.user.is_authenticated:
         institution = Institution.objects.filter(institution_admin=request.user).first()
         if institution:
-            qs = Student.objects.filter(institution=institution)
-            qs_json = serializers.serialize('json', qs)
-            return HttpResponse(qs_json, content_type='application/json')
+            try:
+                course = Course.objects.get(id = cid)
+                teacher = Teacher.objects.get(id = tid)
+            except:
+                return HttpResponseNotFound("Not found")
+            if course.course_teacher is not None:
+                return  HttpResponse("can not assign teacher...already assigned")
+            else:
+                course.course_teacher = teacher
+                course.save()
+                return redirect('stakeholder:course-list')
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+
+
+
+def student_list_json(request,cid,name):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            try:
+                course = Course.objects.get(id = cid)
+            except:
+                return  HttpResponseNotFound("Not found")
+            if course.institution == institution:
+                enrolled_students = course.course_students.all()
+                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
+                qs = unenrolled_students.filter(Q(first_name__contains=name) | Q(last_name__contains = name))
+                qs_json = serializers.serialize('json', qs)
+                return HttpResponse(qs_json, content_type='application/json')
+            else:
+                raise PermissionDenied("You are not allowed")
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
+    
+def student_list_all_json(request,cid):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user).first()
+        if institution:
+            try:
+                course = Course.objects.get(id = cid)
+            except:
+                return  HttpResponseNotFound("Not found")
+            if course.institution == institution:
+                enrolled_students = course.course_students.all()
+                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
+                qs_json = serializers.serialize('json', unenrolled_students)
+                return HttpResponse(qs_json, content_type='application/json')
+            else:
+                    raise PermissionDenied("You are not allowed")
         else:
             raise PermissionDenied("You are not allowed")
     else:

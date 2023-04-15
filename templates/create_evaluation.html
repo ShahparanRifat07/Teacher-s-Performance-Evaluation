@@ -1,0 +1,645 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- MAIN -->
+<main>
+    <h1 class="title">Evaluation</h1>
+    <ul class="breadcrumbs">
+        <li><a href="index.html">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="" class="active">Create Evaluation</a></li>
+    </ul>
+
+
+    <div class="create-evaluation">
+        <div class="card">
+            <div class="create-evaluation-head">
+                <h3 class="text-dark">Create Evaluation</h3>
+            </div>
+            <hr>
+
+
+            <div class="create-evaluation-form">
+                <form action="" method="POST">
+
+
+                    <h5 class="text-dark mb-4">Evaluation Period:</h5>
+                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Start Date</label>
+                            <div class="form-outline">
+                                <input type="date" id="start-date" class="form-control" placeholder="DD-MM-YYYY" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="exampleInputEmail1" class="form-label text-dark">End Date</label>
+                            <div class="form-outline">
+                                <input type="date" id="end-date" class="form-control" placeholder="DD-MM-YYYY" />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4">
+                        <h5 class="text-dark mb-4 mt-4">Stakeholders:</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-student">
+                                <label class="form-check-label" for="stakeholder-student">Students</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-teacher">
+                                <label class="form-check-label" for="stakeholder-teacher">Teachers</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-parent">
+                                <label class="form-check-label" for="stakeholder-parent">Parents</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-self">
+                                <label class="form-check-label" for="stakeholder-self">Self</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-adminstrator">
+                                <label class="form-check-label" for="stakeholder-adminstrator">Administrators</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4 student-factors">
+                        <h5 class="text-dark mb-4 mt-4"> Evaluation Factors: <i class="fas fa-graduation-cap icon"></i>
+                            Students</h5>
+
+
+                        {% for factor in factors %}
+                            {% if factor.stakeholder_tag == student %}
+                                <div class="col-6">
+                                    <div class="form-check form-switch permission-checkbox">
+                                        <input type="checkbox" id="flexSwitchCheckDefault">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">{{factor.name}}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4 teacher-factors">
+                        <h5 class="text-dark mb-4 mt-4"> Evaluation Factors: <i
+                                class="fas fa-chalkboard-teacher icon"></i> Teachers</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Classroom
+                                    Interaction</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Assessment</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Counseling &
+                                    Mentoring</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Professional &
+                                    Personal Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">School, Family and
+                                    Community Relations</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrative
+                                    skills</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Research &
+                                    Development</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Organizational
+                                    Qualities</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Reputation & Be a
+                                    Role Model</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Program and Content
+                                    Knowledge</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Curriculum Design
+                                    and Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Co- Curricular
+                                    Support</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4 parent-factors">
+                        <h5 class="text-dark mb-4 mt-4"> Evaluation Factors: <i class="fa-solid fa-user-group icon"></i>
+                            Parents</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Classroom
+                                    Interaction</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Assessment</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Counseling &
+                                    Mentoring</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Professional &
+                                    Personal Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">School, Family and
+                                    Community Relations</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrative
+                                    skills</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Research &
+                                    Development</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Organizational
+                                    Qualities</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Reputation & Be a
+                                    Role Model</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Program and Content
+                                    Knowledge</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Curriculum Design
+                                    and Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Co- Curricular
+                                    Support</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4 self-factors">
+                        <h5 class="text-dark mb-4 mt-4"> Evaluation Factors: <i class="fa-solid fa-user"></i>
+                            Self</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Classroom
+                                    Interaction</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Assessment</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Counseling &
+                                    Mentoring</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Professional &
+                                    Personal Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">School, Family and
+                                    Community Relations</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrative
+                                    skills</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Research &
+                                    Development</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Organizational
+                                    Qualities</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Reputation & Be a
+                                    Role Model</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Program and Content
+                                    Knowledge</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Curriculum Design
+                                    and Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Co- Curricular
+                                    Support</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4 mt-4 adminstrator-factors">
+                        <h5 class="text-dark mb-4 mt-4"> Evaluation Factors: <i class="fa-solid fa-user-tie icon"></i>
+                            Administrators</h5>
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Classroom
+                                    Interaction</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Assessment</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Counseling &
+                                    Mentoring</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Professional &
+                                    Personal Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">School, Family and
+                                    Community Relations</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrative
+                                    skills</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Research &
+                                    Development</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Organizational
+                                    Qualities</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Reputation & Be a
+                                    Role Model</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Program and Content
+                                    Knowledge</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Curriculum Design
+                                    and Development</label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Co- Curricular
+                                    Support</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="student-submit">
+                        <button type="submit" data-mdb-ripple-duration="0"
+                            class="btn btn-primary btn-block mb-4 mt-4">Save TO Draft</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+
+<!-- MAIN -->
+{% endblock %}
+
+
+{% block start_evaluation %}
+<script type="text/javascript">
+
+
+
+//Create Evaluation
+// $('#datepicker').daterangepicker({
+//   locale: {
+//     format: 'DD/MM/YYYY'
+//   }
+// });
+
+
+
+
+
+// Get the start date and end date inputs
+const startDateInput = document.getElementById("start-date");
+const endDateInput = document.getElementById("end-date");
+
+// Set the minimum value for the start date input to today's date
+startDateInput.min = new Date().toISOString().split("T")[0];
+
+// Add an event listener to the start date input to update the minimum value of the end date input
+startDateInput.addEventListener("change", function () {
+  endDateInput.min = startDateInput.value;
+});
+
+// Add an event listener to the end date input to update the maximum value of the start date input
+endDateInput.addEventListener("change", function () {
+  startDateInput.max = endDateInput.value;
+});
+
+
+
+
+
+
+const studentCheckbox = document.querySelector("#stakeholder-student");
+const studentFactors = document.querySelector(".student-factors");
+
+studentCheckbox.addEventListener("click", function () {
+  studentFactors.classList.toggle("evaluation-form-div-show");
+});
+
+const teacherCheckbox = document.querySelector("#stakeholder-teacher");
+const teacherFactors = document.querySelector(".teacher-factors");
+
+teacherCheckbox.addEventListener("click", function () {
+  teacherFactors.classList.toggle("evaluation-form-div-show");
+});
+
+const parentCheckbox = document.querySelector("#stakeholder-parent");
+const parentFactors = document.querySelector(".parent-factors");
+
+parentCheckbox.addEventListener("click", function () {
+  parentFactors.classList.toggle("evaluation-form-div-show");
+});
+
+const selfCheckbox = document.querySelector("#stakeholder-self");
+const selfFactors = document.querySelector(".self-factors");
+
+selfCheckbox.addEventListener("click", function () {
+  selfFactors.classList.toggle("evaluation-form-div-show");
+});
+
+const administratorCheckbox = document.querySelector(
+  "#stakeholder-adminstrator"
+);
+const administratorFactors = document.querySelector(".adminstrator-factors");
+
+administratorCheckbox.addEventListener("click", function () {
+  administratorFactors.classList.toggle("evaluation-form-div-show");
+});
+
+$(document).ready(function () {
+  $(":checkbox:checked").prop("checked", false);
+});
+
+
+</script>
+{% endblock %}

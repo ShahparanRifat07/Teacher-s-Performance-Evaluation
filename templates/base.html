@@ -76,9 +76,6 @@
                 <ul class="side-dropdown">
                     <li><a href="{% url 'stakeholder:course-list' %}">Course List</a></li>
                     <li><a href="{% url 'stakeholder:add-course' %}">Add Course</a></li>
-                    <li><a href="">Assign Course to Teachers</a></li>
-                    <li><a href="">Assign Course to Students</a></li>
-
                 </ul>
             </li>
 
@@ -88,7 +85,7 @@
                 <ul class="side-dropdown">
                     <li><a href="{% url 'evaluation:factor-list' %}">Evaluation Factors</a></li>
                     <li><a href="">Draft List</a></li>
-                    <li><a href="">Create Evaluation</a></li>
+                    <li><a href="{% url 'evaluation:start-evaluation'  %}">Start Evaluation</a></li>
                 </ul>
             </li>
 
@@ -166,6 +163,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     {% block assign_student %}
+    {% endblock %}
+
+    {% block start_evaluation %}
     {% endblock %}
 </body>
 

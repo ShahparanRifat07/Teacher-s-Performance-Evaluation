@@ -5,7 +5,7 @@ from .views import (register,user_login,add_student,dashboard,user_logout,view_s
                     download_student_excel,
                     add_course,course_list,
                     add_administrator,
-                    assign_course_to_student,assign_course_to_teacher,student_list_json,student_list_all_json,assign_student)
+                    assign_course_to_student,assign_course_to_teacher,student_list_json,student_list_all_json,assign_student,assign_teacher)
 
 app_name ='stakeholder'
 urlpatterns = [
@@ -31,8 +31,10 @@ urlpatterns = [
     #course
     path('institution/add-course/',add_course,name="add-course"),
     path('institution/course-list/',course_list,name="course-list"),
-    path('institution/course/<int:id>/assign-course-to-student/',assign_course_to_student,name="assign-course-student"),
+    path('institution/course/<int:cid>/assign-course-to-student/',assign_course_to_student,name="assign-course-student"),
+    path('institution/course/<int:cid>/assign-course-to-teacher/',assign_course_to_teacher,name="assign-course-teacher"),
     path('institution/course/<int:cid>/assign-student/<int:sid>',assign_student,name="assign-student"),
-    path('api/institution/student-list/<str:name>',student_list_json,name="student-list-json"),
-    path('api/institution/student-list/',student_list_all_json,name="student-list-all-json"),
+    path('institution/course/<int:cid>/assign-teacher/<int:tid>',assign_teacher,name="assign-teacher"),
+    path('api/institution/course/<int:cid>/student-list/<str:name>',student_list_json,name="student-list-json"),
+    path('api/institution/course/<int:cid>/student-list/',student_list_all_json,name="student-list-all-json"),
 ]
