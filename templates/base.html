@@ -83,9 +83,13 @@
                 <a href=""><i class="fa-solid fa-list-check icon"></i>Evaluation
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
+                    {% if admin %}
                     <li><a href="{% url 'evaluation:factor-list' %}">Evaluation Factors</a></li>
                     <li><a href="">Draft List</a></li>
                     <li><a href="{% url 'evaluation:start-evaluation'  %}">Start Evaluation</a></li>
+                    {% else %}
+                    <li><a href="{% url 'evaluation:evaluation-form'  %}">Evaluation Form</a></li>
+                    {% endif %}
                 </ul>
             </li>
 

@@ -1,5 +1,6 @@
 from django.db import models
 from stakeholder.models import Institution,Department,Teacher,Student,Parent
+from django.utils import timezone
 
 # Create your models here.
 
@@ -37,3 +38,22 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class EvaluationEvent(models.Model):
+    name = models.CharField(max_length=128,null=True,blank=True)
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+    stakeholder_tag = models.ManyToManyField(StakeholderTag)
+    factor = models.ManyToManyField(Factor)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    event_created = models.DateTimeField(default=timezone.now())
+    publish = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if self.name is None:
+            self.name = self.institution.institution_name+"["+ str(self.start_date) +"-"+str(self.end_date)+"]"
+            super().save(*args, **kwargs)
