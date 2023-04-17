@@ -51,7 +51,13 @@ def start_evaluation(request):
 
             if request.method == "POST":
                 stakeholders = request.POST.getlist('stakeholder')
-                factors = request.POST.getlist('factors')
+
+                student_factors = request.POST.getlist('student_factors')
+                teacher_factors = request.POST.getlist('teacher_factors')
+                parent_factors = request.POST.getlist('parent_factors')
+                self_factors = request.POST.getlist('self_factors')
+                administrator_factors = request.POST.getlist('administrator_factors')
+                
                 start_date = request.POST.get('start_date')
                 end_date = request.POST.get('end_date')
 
@@ -62,9 +68,26 @@ def start_evaluation(request):
                         stakeholder = StakeholderTag.objects.get(id=id)
                         evaluation_event.stakeholder_tag.add(stakeholder)
 
-                    for id in factors:
+                    for id in student_factors:
                         factor = Factor.objects.get(id=id)
-                        evaluation_event.factor.add(factor)
+                        evaluation_event.student_factor.add(factor)
+                    
+                    for id in teacher_factors:
+                        factor = Factor.objects.get(id=id)
+                        evaluation_event.teacher_factor.add(factor)
+                    
+                    for id in parent_factors:
+                        factor = Factor.objects.get(id=id)
+                        evaluation_event.parent_factor.add(factor)
+                    
+                    for id in self_factors:
+                        factor = Factor.objects.get(id=id)
+                        evaluation_event.self_factor.add(factor)
+                    
+                    for id in administrator_factors:
+                        factor = Factor.objects.get(id=id)
+                        evaluation_event.administrator_factor.add(factor)
+                       
                 return redirect("evaluation:start-evaluation")
 
             if request.method == "GET":
@@ -111,21 +134,46 @@ def evaluation_form(request):
 
             if start_time <= now <= end_time:
                 factors = evaluaton_event.factor.all()
-                questions = {}
-                for factor in factors:
-                    question = Question.objects.filter(Q(factor = factor) & Q(stakeholder_tag = student_tag))
-                    questions[factor] = question
-                
-
-                for factor, questions in questions.items():
-                    for question in questions:
-                        print('\t', question)
+                questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
                 context = {
                     "questions" : questions
                 }
                 return render(request, 'evaluation_form.html',context)
-            
-        else:
-            return HttpResponse('This view is not available at this time.')
+        
+        parent = Parent.objects.filter(user = request.user).first()
+        if parent:
+            evaluaton_event = EvaluationEvent.objects.filter(start_date__gte=now).order_by('start_date').first()
+
+            start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+            end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+
+            if start_time <= now <= end_time:
+                factors = evaluaton_event.factor.all()
+                questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = parent_tag))
+                context = {
+                    "questions" : questions
+                }
+                return render(request, 'evaluation_form.html',context)
+        
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_published = True) & Q(is_complete = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+
+                print(start_time)
+                print(now)
+                print(end_time)
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = teacher_tag))
+                    context = {
+                        "questions" : questions
+                    }
+                    
+                    return render(request, 'evaluation_form.html',context)
+            else:
+                return HttpResponse('Evaluation is not started yet')
     else:
         return redirect('stakeholder:login')

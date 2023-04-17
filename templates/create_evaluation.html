@@ -100,7 +100,7 @@
                         {% if student in factor.stakeholder_tag.all %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
-                                <input class="student-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="factors" disabled>
+                                <input class="student-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="student_factors" disabled>
                                 <label class="form-check-label" for="{{factor.id}}">{{factor.name}}</label>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                         {% if teacher in factor.stakeholder_tag.all %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
-                                <input class="teacher-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="factors" disabled>
+                                <input class="teacher-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="teacher_factors" disabled>
                                 <label class="form-check-label" for="{{factor.id}}">{{factor.name}}</label>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                         {% if parent in factor.stakeholder_tag.all %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
-                                <input class="parent-checkbox" type="checkbox" id="flexSwitchCheckDefault" value="{{factor.id}}" name="factors" disabled>
+                                <input class="parent-checkbox" type="checkbox" id="flexSwitchCheckDefault" value="{{factor.id}}" name="parent_factors" disabled>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">{{factor.name}}</label>
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                         {% if self in factor.stakeholder_tag.all %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
-                                <input class="self-checkbox" type="checkbox" id="flexSwitchCheckDefault" value="{{factor.id}}" name="factors" disabled>
+                                <input class="self-checkbox" type="checkbox" id="flexSwitchCheckDefault" value="{{factor.id}}" name="self_factors" disabled>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">{{factor.name}}</label>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                         {% if administrator in factor.stakeholder_tag.all %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox ">
-                                <input class="administrator-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="factors" disabled>
+                                <input class="administrator-checkbox" type="checkbox" id="{{factor.id}}" value="{{factor.id}}" name="administrator_factors" disabled>
                                 <label class="form-check-label active" for="{{factor.id}}">{{factor.name}}</label>
                             </div>
                         </div>

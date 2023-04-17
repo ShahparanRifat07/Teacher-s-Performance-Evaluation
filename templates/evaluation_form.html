@@ -33,10 +33,11 @@
                 <form action="" method="POST">
                     <div class="evaluation-question">
 
-                        {% for factor, question_set in questions.items %}
-                        {% for question in question_set %}
+
+                        {% for question in questions%}
+                        
                         <div class="form-outline mb-4">
-                            <p> <span class="me-2">Q-1:</span> {{question.question}}</p>
+                            <p> <span class="me-2">Q-{{forloop.counter}}:</span>{{question.question}}</p>
 
                             <div class="form-check">
                                 <input class="form-check-input ms-2" type="radio" name="question-1"
@@ -67,7 +68,7 @@
                                 </label>
                             </div>
                         </div>
-                        {% endfor %}
+                        
                         {% endfor %}
                     </div>
 

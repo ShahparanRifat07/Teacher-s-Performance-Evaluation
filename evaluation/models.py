@@ -44,11 +44,14 @@ class EvaluationEvent(models.Model):
     name = models.CharField(max_length=128,null=True,blank=True)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     stakeholder_tag = models.ManyToManyField(StakeholderTag)
-    factor = models.ManyToManyField(Factor)
+    student_factor = models.ManyToManyField(Factor, related_name="evaluation_student_factor")
+    parent_factor = models.ManyToManyField(Factor, related_name="evaluation_parent_factor")
+    teacher_factor = models.ManyToManyField(Factor, related_name="evaluation_teacher_factor")
+    self_factor = models.ManyToManyField(Factor, related_name="evaluation_self_factor")
+    administrator_factor = models.ManyToManyField(Factor, related_name="evaluation_administrator_factor")
     start_date = models.DateField()
     end_date = models.DateField()
     event_created = models.DateTimeField(default=timezone.now())
-    publish = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -325,7 +325,7 @@ def save_factors_for_institutions(instance, *args, **kwargs):
         Professionalism.institution_tag.add(tertiary,secondary)
         Professionalism.stakeholder_tag.add(student)
 
-        question_18= Question(question="Does the teacher support and help you understand any concepts other than class time?",factor=Professionalism)
+        question_18= Question(question="The teacher demonstrate a high level of integrity and honesty in their interactions with students.",factor=Professionalism)
         question_18.save()
         question_18.stakeholder_tag.add(student)
         question_18.institution_tag.add(secondary,tertiary)
@@ -541,7 +541,7 @@ def save_factors_for_institutions(instance, *args, **kwargs):
         Professionalism.institution_tag.add(tertiary,secondary)
         Professionalism.stakeholder_tag.add(student)
 
-        question_18= Question(question="Does the teacher support and help you understand any concepts other than class time?",factor=Professionalism)
+        question_18= Question(question="The teacher demonstrate a high level of integrity and honesty in their interactions with students.",factor=Professionalism)
         question_18.save()
         question_18.stakeholder_tag.add(student)
         question_18.institution_tag.add(secondary,tertiary)
