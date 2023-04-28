@@ -61,7 +61,7 @@ def start_evaluation(request):
                 start_date = request.POST.get('start_date')
                 end_date = request.POST.get('end_date')
 
-                evaluation_event = EvaluationEvent(institution = institution,start_date = start_date, end_date = end_date)
+                evaluation_event = EvaluationEvent(institution = institution,start_date = start_date, end_date = end_date,is_start = True)
                 evaluation_event.save()
                 with transaction.atomic():
                     for id in stakeholders:
@@ -113,6 +113,9 @@ def start_evaluation(request):
         return redirect('stakeholder:login')
     
 
+def evaluation_course(request, course_id):
+    pass
+
 def evaluation_form(request):
     if request.user.is_authenticated:
         stakeholder_tag = StakeholderTag.objects.all()
@@ -127,47 +130,73 @@ def evaluation_form(request):
 
         student = Student.objects.filter(user = request.user).first()
         if student:
-            evaluaton_event = EvaluationEvent.objects.filter(start_date__gte=now).order_by('start_date').first()
-
-            start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-            end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-
-            if start_time <= now <= end_time:
-                factors = evaluaton_event.factor.all()
-                questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
-                context = {
-                    "questions" : questions
-                }
-                return render(request, 'evaluation_form.html',context)
-        
-        parent = Parent.objects.filter(user = request.user).first()
-        if parent:
-            evaluaton_event = EvaluationEvent.objects.filter(start_date__gte=now).order_by('start_date').first()
-
-            start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-            end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-
-            if start_time <= now <= end_time:
-                factors = evaluaton_event.factor.all()
-                questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = parent_tag))
-                context = {
-                    "questions" : questions
-                }
-                return render(request, 'evaluation_form.html',context)
-        
-        teacher = Teacher.objects.filter(user = request.user).first()
-        if teacher:
-            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_published = True) & Q(is_complete = False)).first()
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
             if evaluaton_event:
                 start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
                 end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
 
-                print(start_time)
-                print(now)
-                print(end_time)
                 if start_time <= now <= end_time:
-                    factors = evaluaton_event.factor.all()
+                    factors = evaluaton_event.student_factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
+                    context = {
+                        "questions" : questions
+                    }
+                    return render(request, 'evaluation_form.html',context)
+                else:
+                    return HttpResponse("evaluation is not started yet")
+            else:
+                return HttpResponse("evaluation is not started yet")
+        
+        parent = Parent.objects.filter(user = request.user).first()
+        if parent:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = parent.institution) & Q(is_start = True) & Q(is_end = False)).first()
+
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.parent_factor.all()
+
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = parent_tag))
+                    context = {
+                        "questions" : questions
+                    }
+                    return render(request, 'evaluation_form.html',context)
+            else:
+                return HttpResponse("evaluation is not started yet")
+        
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.teacher_factor.all()
+                    self_factors = evaluation_form.self_factor.all()
                     questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = teacher_tag))
+                    self_questions = Question.objects.filter(Q(factor__in = self_factors) & Q(stakeholder_tag = self_tag))
+                    context = {
+                        "questions" : questions,
+                        "self_questions"  : self_questions,
+                    }
+                    
+                    return render(request, 'evaluation_form.html',context)
+            else:
+                return HttpResponse('Evaluation is not started yet')
+        
+        administrator = Administrator.objects.filter(user = request.user).first()
+        if administrator:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = administrator.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.administrator_factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = administrator_tag))
                     context = {
                         "questions" : questions
                     }
@@ -175,5 +204,6 @@ def evaluation_form(request):
                     return render(request, 'evaluation_form.html',context)
             else:
                 return HttpResponse('Evaluation is not started yet')
+
     else:
         return redirect('stakeholder:login')

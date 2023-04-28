@@ -321,6 +321,9 @@ chart.render();
 
 
 //admin dashboard
+function closeFloatingDiv() {
+  document.getElementById('floating-div').style.display = 'none';
+}
 
 var options = {
   series: [76, 90, 61, 90, 60],

@@ -193,6 +193,17 @@ def save_factors_for_institutions(instance, *args, **kwargs):
         question_38.stakeholder_tag.add(parent,self)
         question_38.institution_tag.add(primary)
 
+        #Overall Rating
+        Overall_Rating = Factor(name="Overall Rating",description = "'Overall Rating' describes the overall performance",institution = instance)
+        Overall_Rating.save()
+        Overall_Rating.institution_tag.add(primary,secondary,tertiary)
+        Overall_Rating.stakeholder_tag.add(administrator,self,student,parent,teacher)
+
+        question_39= Question(question="Provide an overall rating.",factor=Overall_Rating)
+        question_39.save()
+        question_39.stakeholder_tag.add(administrator,self,student,parent,teacher)
+        question_39.institution_tag.add(primary,secondary,tertiary)
+
 
 
 
@@ -424,6 +435,17 @@ def save_factors_for_institutions(instance, *args, **kwargs):
         question_37.save()
         question_37.stakeholder_tag.add(student,self)
         question_37.institution_tag.add(secondary,tertiary)
+
+        #Overall Rating
+        Overall_Rating = Factor(name="Overall Rating",description = "'Overall Rating' describes the overall performance",institution = instance)
+        Overall_Rating.save()
+        Overall_Rating.institution_tag.add(primary,secondary,tertiary)
+        Overall_Rating.stakeholder_tag.add(administrator,self,student,parent,teacher)
+
+        question_39= Question(question="Provide an overall rating.",factor=Overall_Rating)
+        question_39.save()
+        question_39.stakeholder_tag.add(administrator,self,student,parent,teacher)
+        question_39.institution_tag.add(primary,secondary,tertiary)
 
 
 
@@ -659,6 +681,17 @@ def save_factors_for_institutions(instance, *args, **kwargs):
         question_37.save()
         question_37.stakeholder_tag.add(student,self)
         question_37.institution_tag.add(secondary,tertiary)
+
+        #Overall Rating
+        Overall_Rating = Factor(name="Overall Rating",description = "'Overall Rating' describes the overall performance",institution = instance)
+        Overall_Rating.save()
+        Overall_Rating.institution_tag.add(primary,secondary,tertiary)
+        Overall_Rating.stakeholder_tag.add(administrator,self,student,parent,teacher)
+
+        question_39= Question(question="Provide an overall rating.",factor=Overall_Rating)
+        question_39.save()
+        question_39.stakeholder_tag.add(administrator,self,student,parent,teacher)
+        question_39.institution_tag.add(primary,secondary,tertiary)
     
 
     elif instance.institution_type == other_institution:

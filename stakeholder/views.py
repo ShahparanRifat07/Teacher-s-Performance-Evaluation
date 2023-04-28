@@ -51,9 +51,14 @@ def admin_dashboard(request):
         institution = Institution.objects.filter(institution_admin=user)
         if institution:
             student_number = Student.objects.all().count()
+            if user.last_login is None:
+                first_time_login = True
+            else:
+                first_time_login = False
             context={
                 'student_number' : student_number,
                 'admin' : institution[0].institution_admin,
+                'first_time': first_time_login
             }
             return render(request,'admin_dashboard.html',context)
         else:
@@ -549,11 +554,13 @@ def assign_student(request,cid,sid):
                 student = Student.objects.get(id = sid)
             except:
                 return HttpResponseNotFound("Not found")
-            if student.course_set.filter(pk=course.pk).exists():
+            
+            if student.course_students.filter(pk=course.pk).exists():
                 return  HttpResponse("can not add course...already assigned")
             else:
                 course.course_students.add(student)
                 return redirect('stakeholder:course-list')
+            
         else:
             raise PermissionDenied("You are not allowed")
     else:
