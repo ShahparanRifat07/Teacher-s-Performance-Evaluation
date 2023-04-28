@@ -113,8 +113,150 @@ def start_evaluation(request):
         return redirect('stakeholder:login')
     
 
-def evaluation_course(request, course_id):
-    pass
+def course_evaluation(request):
+    if request.user.is_authenticated:
+        now = timezone.now()
+        student = Student.objects.filter(user = request.user).first()
+        if student:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    courses = student.course_students.all()
+                    evaluation_started = True
+                    context = {
+                    'courses' : courses, 
+                    'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'course_evaluation.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'course_evaluation.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'course_evaluation.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+
+
+
+
+def course_evaluation_form(request,c_id):
+    if request.user.is_authenticated:
+        stakeholder_tag = StakeholderTag.objects.all()
+        #stakeholders
+        student_tag = stakeholder_tag[0]
+        now = timezone.now()
+        student = Student.objects.filter(user = request.user).first()
+        if student:
+            try:
+                course = Course.objects.get(id = c_id)
+            except:
+                return HttpResponseNotFound("this course is not found")
+            
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.student_factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
+                    evaluation_started = True
+                    context = {
+                       "questions" : questions,
+                       'evaluation_started' : evaluation_started,
+                       "course":course,
+                    }
+                    return render(request, 'course_evaluation_form.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'course_evaluation_form.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'course_evaluation_form.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+
+def course_evaluation_save(request,t_id):
+    if request.user.is_authenticated:
+        stakeholder_tag = StakeholderTag.objects.all()
+        #stakeholders
+        student_tag = stakeholder_tag[0]
+        now = timezone.now()
+        student = Student.objects.filter(user = request.user).first()
+        if student:
+            try:
+                teacher = Teacher.objects.get(id = t_id)
+            except:
+                return HttpResponseNotFound("this course is not found")
+            
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.student_factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
+                    evaluation_started = True
+                    context = {
+                       "questions" : questions,
+                       'evaluation_started' : evaluation_started,
+                       "course":course,
+                    }
+                    return render(request, 'course_evaluation_form.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'course_evaluation_form.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'course_evaluation_form.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def evaluation_form(request):
     if request.user.is_authenticated:

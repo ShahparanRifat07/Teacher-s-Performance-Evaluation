@@ -74,8 +74,10 @@
                 <a href=""><i class="fas fa-book-reader icon"></i>Courses
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
+                    {% if admin %}
                     <li><a href="{% url 'stakeholder:course-list' %}">Course List</a></li>
                     <li><a href="{% url 'stakeholder:add-course' %}">Add Course</a></li>
+                    {% endif %}
                 </ul>
             </li>
 
@@ -87,20 +89,24 @@
                     <li><a href="{% url 'evaluation:factor-list' %}">Evaluation Factors</a></li>
                     <li><a href="">Draft List</a></li>
                     <li><a href="{% url 'evaluation:start-evaluation'  %}">Start Evaluation</a></li>
-                    {% else %}
-                    <li><a href="{% url 'evaluation:evaluation-form'  %}">Evaluation Form</a></li>
+                    {% elif student %}
+                    <li><a href="{% url 'evaluation:course-evaluation'  %}">Course Evaluation</a></li>
                     {% endif %}
                 </ul>
             </li>
 
+            {% if admin %}
             <li>
                 <a href=""><i class="fa-solid fa-print icon"></i>Reprots
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
+                    
                     <li><a href="">Ongoing Evaluation Report</a></li>
                     <li><a href="">Evaluation History</a></li>
+                    
                 </ul>
             </li>
+            {% endif %}
 
             <li>
                 <a href=""><i class="fa-solid fa-gear icon"></i>Settings</a>

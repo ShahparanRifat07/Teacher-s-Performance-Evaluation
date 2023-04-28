@@ -8,7 +8,7 @@
     <ul class="breadcrumbs">
         <li><a href="index.html">Home</a></li>
         <li class="divider">/</li>
-        <li><a href="index.html">Evaluation</a></li>
+        <li><a href="index.html">Course Evaluation</a></li>
         <li class="divider">/</li>
         <li><a href="" class="active">English(A)</a></li>
     </ul>
@@ -17,14 +17,16 @@
 
     <div class="evaluation mt-4">
         <div class="card">
+            {% if evaluation_started == True %}
             <div class="evaluation-head">
                 <h4 class="text-dark">Evaluation</h4>
             </div>
             <hr>
             <div class="evaluation-course-details">
-                <p><span>Course Teacher : </span>Jhon Doe</p>
-                <p><span>Coure Name : </span> English-I</p>
-                <p><span>Course Section : </span> B</p>
+                <p><span>Course Teacher : </span>{{course.course_teacher.first_name}}
+                    {{course.course_teacher.last_name}}</p>
+                <p><span>Coure Name : </span> {{course.course_name}}</p>
+                <p><span>Course Section : </span> {{course.section}}</p>
             </div>
             <hr>
 
@@ -35,7 +37,7 @@
 
 
                         {% for question in questions%}
-                        
+
                         <div class="form-outline mb-4">
                             <p> <span class="me-2">Q-{{forloop.counter}}:</span>{{question.question}}</p>
 
@@ -68,7 +70,7 @@
                                 </label>
                             </div>
                         </div>
-                        
+
                         {% endfor %}
                     </div>
 
@@ -89,6 +91,11 @@
 
                 </form>
             </div>
+            {% else %}
+            <div>
+                <h5>Evaluation isn't started yet</h5>
+            </div>
+            {% endif %}
         </div>
     </div>
 
