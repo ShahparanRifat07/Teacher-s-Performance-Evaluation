@@ -1,5 +1,5 @@
 from django.db import models
-from stakeholder.models import Institution,Department,Teacher,Student,Parent
+from stakeholder.models import Institution,Department,Teacher,Student,Parent,Course
 from django.utils import timezone
 
 # Create your models here.
@@ -62,3 +62,17 @@ class EvaluationEvent(models.Model):
         if self.name is None:
             self.name = self.institution.institution_name+"["+ str(self.start_date) +"-"+str(self.end_date)+"]"
             super().save(*args, **kwargs)
+
+
+
+class StudentEvaluationResponse(models.Model):
+    evaluaton_event = models.ForeignKey(EvaluationEvent, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    rating = models.CharField(max_length=1)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.question.id)+" /"+self.student.first_name+" /"+str(self.evaluaton_event.id)+" /"+self.teacher.first_name

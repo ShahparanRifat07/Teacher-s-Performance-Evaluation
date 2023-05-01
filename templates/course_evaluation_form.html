@@ -32,39 +32,38 @@
 
 
             <div class="stakeholder-evaluation-form">
-                <form action="" method="POST">
+                <form action="{% url 'evaluation:course-evaluation-save' course.id evaluation_event.id %}" method="POST">
+                    {% csrf_token %}
                     <div class="evaluation-question">
-
-
                         {% for question in questions%}
 
                         <div class="form-outline mb-4">
                             <p> <span class="me-2">Q-{{forloop.counter}}:</span>{{question.question}}</p>
 
                             <div class="form-check">
-                                <input class="form-check-input ms-2" type="radio" name="question-1"
-                                    id="flexRadioDefault1" />
+                                <input class="form-check-input ms-2" value="5" type="radio" name="question-{{ question.id }}"
+                                    id="flexRadioDefault1" required/>
                                 <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                <input class="form-check-input ms-2" value="4" type="radio" name="question-{{ question.id }}"
                                     id="flexRadioDefault2" />
                                 <label class="form-check-label " for="flexRadioDefault2"> Agree
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                <input class="form-check-input ms-2" value="3" type="radio" name="question-{{ question.id }}"
                                     id="flexRadioDefault1" />
                                 <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
                                     Disagree </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                <input class="form-check-input ms-2" value="2" type="radio" name="question-{{ question.id }}"
                                     id="flexRadioDefault1" />
                                 <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                <input class="form-check-input ms-2" value="1" type="radio" name="question-{{ question.id }}"
                                     id="flexRadioDefault1" />
                                 <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
                                 </label>

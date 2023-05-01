@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from stakeholder.models import Institution,Student,Parent,Department,Teacher,Course,Administrator
-from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent
+from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent,StudentEvaluationResponse
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q
@@ -174,6 +174,7 @@ def course_evaluation_form(request,c_id):
                     questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
                     evaluation_started = True
                     context = {
+                        "evaluation_event": evaluaton_event,
                        "questions" : questions,
                        'evaluation_started' : evaluation_started,
                        "course":course,
@@ -198,45 +199,45 @@ def course_evaluation_form(request,c_id):
 
 
 
-def course_evaluation_save(request,t_id):
+def course_evaluation_save(request,c_id,e_id):
     if request.user.is_authenticated:
-        stakeholder_tag = StakeholderTag.objects.all()
-        #stakeholders
-        student_tag = stakeholder_tag[0]
-        now = timezone.now()
         student = Student.objects.filter(user = request.user).first()
         if student:
             try:
-                teacher = Teacher.objects.get(id = t_id)
+                course = Course.objects.get(id = c_id)   
             except:
                 return HttpResponseNotFound("this course is not found")
+            try:
+                evaluation_event = EvaluationEvent.objects.get(id = e_id)
+                if  evaluation_event.is_start == False:
+                    return HttpResponse("evaluation event isn't started yet")
+                if  evaluation_event.is_end == True:
+                    return HttpResponse("evaluation event already finished")
+            except:
+                return HttpResponse("NO evaluation event found")
             
-            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
-            if evaluaton_event:
-                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-                if start_time <= now <= end_time:
-                    factors = evaluaton_event.student_factor.all()
-                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
-                    evaluation_started = True
-                    context = {
-                       "questions" : questions,
-                       'evaluation_started' : evaluation_started,
-                       "course":course,
-                    }
-                    return render(request, 'course_evaluation_form.html',context)
-                else:
-                    evaluation_started = False
-                    context = {
-                        'evaluation_started' : evaluation_started,
-                    }
-                    return render(request, 'course_evaluation_form.html',context)
+            if request.method == 'POST':
+                # create an empty dictionary to store the question ids and answers
+                answers = {}
+        
+                # loop through the POST data and extract the values for each question
+                for key, value in request.POST.items():
+                    if key.startswith('question-'):
+                        # extract the question ID from the name attribute of the radio button
+                        question_id = int(key.split('-')[1])
+                        # store the answer value in the dictionary
+                        answers[question_id] = value
+
+
+                with transaction.atomic():
+                    for question_id, rating in answers.items():
+                        question = Question.objects.get(id = question_id)
+                        student_question_response = StudentEvaluationResponse(evaluaton_event = evaluation_event,question = question,student = student,course = course,teacher = course.course_teacher,rating = str(rating))
+                        student_question_response.save()
+                return redirect("stakeholder:student-dashboard")
             else:
-                evaluation_started = False
-                context = {
-                    'evaluation_started' : evaluation_started,
-                }
-                return render(request, 'course_evaluation_form.html',context)
+                return HttpResponse("not allowed")
+            
         else:
             return HttpResponse("You are not allowed to view this")
     else:
