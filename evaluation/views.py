@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from stakeholder.models import Institution,Student,Parent,Department,Teacher,Course,Administrator
-from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent,StudentEvaluationResponse
+from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent,StudentEvaluationResponse,TeacherEvaluationResponse
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q
@@ -123,7 +123,11 @@ def course_evaluation(request):
                 start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
                 end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
                 if start_time <= now <= end_time:
-                    courses = student.course_students.all()
+                    evaluated_courses = Course.objects.filter(
+                        Q(studentevaluationresponse__student=student) & Q(studentevaluationresponse__evaluaton_event = evaluaton_event)).distinct()
+                    unevaluated_courses = student.course_students.exclude(Q(id__in=evaluated_courses))
+
+                    courses = unevaluated_courses
                     evaluation_started = True
                     context = {
                     'courses' : courses, 
@@ -234,7 +238,7 @@ def course_evaluation_save(request,c_id,e_id):
                         question = Question.objects.get(id = question_id)
                         student_question_response = StudentEvaluationResponse(evaluaton_event = evaluation_event,question = question,student = student,course = course,teacher = course.course_teacher,rating = str(rating))
                         student_question_response.save()
-                return redirect("stakeholder:student-dashboard")
+                return redirect("evaluation:course-evaluation")
             else:
                 return HttpResponse("not allowed")
             
@@ -247,13 +251,141 @@ def course_evaluation_save(request,c_id,e_id):
 
 
 
+def colleague_evaluation(request):
+    if request.user.is_authenticated:
+        now = timezone.now()
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    
+                    teachers = Teacher.objects.filter(institution = teacher.institution).exclude(id = teacher.id)
+
+                    evaluated_teachers = Teacher.objects.filter(
+                        Q(teacherevaluationresponse__evaluator=teacher) & Q(teacherevaluationresponse__evaluaton_event = evaluaton_event)).distinct()
+                    unevaluated_teachers = teachers.exclude(Q(id__in=evaluated_teachers))
+                    print(unevaluated_teachers)
+
+
+                    evaluation_started = True
+                    context = {
+                    'teacher' : teacher,
+                    'teachers' : unevaluated_teachers, 
+                    'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'colleague_evaluation.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'colleague_evaluation.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'colleague_evaluation.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
 
 
 
+def colleague_evaluation_form(request,t_id):
+    if request.user.is_authenticated:
+        stakeholder_tag = StakeholderTag.objects.all()
+        #stakeholders
+        teacher_tag = stakeholder_tag[1]
+        now = timezone.now()
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            try:
+                colleague = Teacher.objects.get(id = t_id)
+            except:
+                return HttpResponseNotFound("teacher doesn't exists")
+            
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    factors = evaluaton_event.student_factor.all()
+                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = teacher_tag))
+                    evaluation_started = True
+                    context = {
+                        "evaluation_event": evaluaton_event,
+                       "questions" : questions,
+                       'evaluation_started' : evaluation_started,
+                       "colleague": colleague,
+                    }
+                    return render(request, 'colleague_evaluation_form.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'colleague_evaluation_form.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'colleague_evaluation_form.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
 
 
 
+def colleague_evaluation_save(request,t_id,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            try:
+                colleague = Teacher.objects.get(id = t_id)   
+            except:
+                return HttpResponseNotFound("Teacher doesn't exists")
+            try:
+                evaluation_event = EvaluationEvent.objects.get(id = e_id)
+                if  evaluation_event.is_start == False:
+                    return HttpResponse("evaluation event isn't started yet")
+                if  evaluation_event.is_end == True:
+                    return HttpResponse("evaluation event already finished")
+            except:
+                return HttpResponse("NO evaluation event found")
+            
+            if request.method == 'POST':
+                # create an empty dictionary to store the question ids and answers
+                answers = {}
+        
+                # loop through the POST data and extract the values for each question
+                for key, value in request.POST.items():
+                    if key.startswith('question-'):
+                        # extract the question ID from the name attribute of the radio button
+                        question_id = int(key.split('-')[1])
+                        # store the answer value in the dictionary
+                        answers[question_id] = value
 
+
+                with transaction.atomic():
+                    for question_id, rating in answers.items():
+                        question = Question.objects.get(id = question_id)
+                        teacher_question_response = TeacherEvaluationResponse(evaluaton_event = evaluation_event, question = question, evaluator = teacher,teacher= colleague,rating = str(rating))
+                        teacher_question_response.save()
+                return redirect("evaluation:colleague-evaluation")
+            else:
+                return HttpResponse("not allowed")
+            
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
 
 
 

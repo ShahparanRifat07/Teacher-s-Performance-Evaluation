@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InstitutionTag,Factor,StakeholderTag, Question,EvaluationEvent,StudentEvaluationResponse
+from .models import InstitutionTag,Factor,StakeholderTag, Question,EvaluationEvent,StudentEvaluationResponse,TeacherEvaluationResponse
 # Register your models here.
 
 admin.site.register(InstitutionTag)
@@ -8,3 +8,4 @@ admin.site.register(StakeholderTag)
 admin.site.register(Question)
 admin.site.register(EvaluationEvent)
 admin.site.register(StudentEvaluationResponse)
+admin.site.register(TeacherEvaluationResponse)

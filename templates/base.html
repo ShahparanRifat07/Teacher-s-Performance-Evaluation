@@ -91,19 +91,27 @@
                     <li><a href="{% url 'evaluation:start-evaluation'  %}">Start Evaluation</a></li>
                     {% elif student %}
                     <li><a href="{% url 'evaluation:course-evaluation'  %}">Course Evaluation</a></li>
+                    {% elif teacher %}
+                    <li><a href="{% url 'evaluation:colleague-evaluation'  %}">Colleague Evaluation</a></li>
+                    <li><a href="{% url 'evaluation:course-evaluation'  %}">Self Evaluation</a></li>
                     {% endif %}
                 </ul>
             </li>
 
-            {% if admin %}
+            {% if admin or teacher %}
             <li>
                 <a href=""><i class="fa-solid fa-print icon"></i>Reprots
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
-                    
+                    {% if admin %}
                     <li><a href="">Ongoing Evaluation Report</a></li>
                     <li><a href="">Evaluation History</a></li>
-                    
+                    {% endif %}
+
+                    {% if teacher %}
+                    <li><a href="">Current Evaluation Report</a></li>
+                    <li><a href="">Evaluation Report History</a></li>
+                    {% endif %}
                 </ul>
             </li>
             {% endif %}

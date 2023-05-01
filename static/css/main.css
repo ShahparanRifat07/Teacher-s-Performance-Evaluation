@@ -1096,3 +1096,17 @@ main .chart-data .card {
 }
 
 /* Admin Dashboard */
+
+/*colleague evaluation*/
+
+.colleague-notice{
+    margin: auto;
+    color: var(--light-red);
+}
+
+.colleague-remaining{
+    margin: auto;
+}
+
+
+/*colleague evaluation*/

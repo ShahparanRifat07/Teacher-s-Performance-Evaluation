@@ -76,3 +76,16 @@ class StudentEvaluationResponse(models.Model):
 
     def __str__(self):
         return str(self.question.id)+" /"+self.student.first_name+" /"+str(self.evaluaton_event.id)+" /"+self.teacher.first_name
+    
+
+
+class TeacherEvaluationResponse(models.Model):
+    evaluaton_event = models.ForeignKey(EvaluationEvent, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    evaluator = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="evaluator")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    rating = models.CharField(max_length=1)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.question.id)+" /"+self.evaluator.first_name+" /"+str(self.evaluaton_event.id)+" /"+self.teacher.first_name
