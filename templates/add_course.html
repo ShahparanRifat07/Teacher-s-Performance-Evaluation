@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- MAIN -->
+<main>
+    <h1 class="title">Add Teachers</h1>
+    <ul class="breadcrumbs">
+        <li><a href="index.html">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="course_list.html">Courses</a></li>
+        <li class="divider">/</li>
+        <li><a href="" class="active">Add Course</a></li>
+    </ul>
+
+    <div class="add-student">
+        <div class="card">
+            <div class="add-student-head">
+                <h4 class="text-dark">Course Details</h4>
+                <a href="" class="btn btn-success"><i class="fa-solid fa-file-excel icon"></i> Add Courses Using
+                    XLS</a>
+            </div>
+            <hr>
+            <div class="add-student-form">
+                <form action="{% url 'stakeholder:add-course' %}" method="POST">
+                    {% csrf_token %}
+                    <!-- 3 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Course ID</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example1" name="course_id" class="form-control"
+                                    placeholder="Enter Course ID" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Course Name</label>
+                            <div class="form-outline">
+                                <input type="text" id="form6Example2" name="course_name" class="form-control"
+                                    placeholder="Enter Course Name" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="exampleInputEmail1" class="form-label text-dark">Section</label>
+                            <div class="form-outline">
+                                <input type="text" name="course_section" id="form6Example2" class="form-control"
+                                    placeholder="Enter Section" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Submit button -->
+                    <div class="student-submit">
+                        <button type="submit" data-mdb-ripple-duration="0"
+                            class="btn btn-primary btn-block mb-4 mt-4">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+<!-- MAIN -->
+
+{% endblock %}
