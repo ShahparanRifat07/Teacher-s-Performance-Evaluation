@@ -529,10 +529,9 @@ def assign_course_to_student(request,cid):
             try:
                 course = Course.objects.get(id = cid)
                 enrolled_students = course.course_students.all()
-                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
+                unenrolled_students = Student.objects.filter(institution=institution).exclude(pk__in=[item.pk for item in enrolled_students])
             except:
                 return HttpResponseNotFound("Not found")
-            students = Student.objects.filter(institution=institution)
             if request.method == 'GET':
                 context = {
                     'course' : course,
@@ -626,7 +625,7 @@ def student_list_json(request,cid,name):
                 return  HttpResponseNotFound("Not found")
             if course.institution == institution:
                 enrolled_students = course.course_students.all()
-                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
+                unenrolled_students = Student.objects.filter(institution=institution).exclude(pk__in=[item.pk for item in enrolled_students])
                 qs = unenrolled_students.filter(Q(first_name__contains=name) | Q(last_name__contains = name))
                 qs_json = serializers.serialize('json', qs)
                 return HttpResponse(qs_json, content_type='application/json')
@@ -647,7 +646,7 @@ def student_list_all_json(request,cid):
                 return  HttpResponseNotFound("Not found")
             if course.institution == institution:
                 enrolled_students = course.course_students.all()
-                unenrolled_students = Student.objects.exclude(pk__in=[item.pk for item in enrolled_students])
+                unenrolled_students = Student.objects.filter(institution=institution).exclude(pk__in=[item.pk for item in enrolled_students])
                 qs_json = serializers.serialize('json', unenrolled_students)
                 return HttpResponse(qs_json, content_type='application/json')
             else:

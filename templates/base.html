@@ -91,9 +91,11 @@
                     <li><a href="{% url 'evaluation:start-evaluation'  %}">Start Evaluation</a></li>
                     {% elif student %}
                     <li><a href="{% url 'evaluation:course-evaluation'  %}">Course Evaluation</a></li>
+                    {% elif parent %}
+                    <li><a href="{% url 'evaluation:course-evaluation-parent'  %}">Course Evaluation</a></li>
                     {% elif teacher %}
                     <li><a href="{% url 'evaluation:colleague-evaluation'  %}">Colleague Evaluation</a></li>
-                    <li><a href="{% url 'evaluation:course-evaluation'  %}">Self Evaluation</a></li>
+                    <li><a href="">Self Evaluation</a></li>
                     {% endif %}
                 </ul>
             </li>
