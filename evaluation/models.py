@@ -1,5 +1,5 @@
 from django.db import models
-from stakeholder.models import Institution,Department,Teacher,Student,Parent,Course
+from stakeholder.models import Institution,Department,Teacher,Student,Parent,Course,Administrator
 from django.utils import timezone
 
 # Create your models here.
@@ -51,7 +51,7 @@ class EvaluationEvent(models.Model):
     administrator_factor = models.ManyToManyField(Factor, related_name="evaluation_administrator_factor",blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    event_created = models.DateTimeField(default=timezone.now())
+    event_created = models.DateTimeField(default=timezone.now)
     is_end = models.BooleanField(default=False)
     is_start = models.BooleanField(default=False)
 
@@ -103,3 +103,29 @@ class ParentEvaluationResponse(models.Model):
 
     def __str__(self):
         return str(self.question.id)+" /"+self.parent.student.first_name+" /"+str(self.evaluaton_event.id)+" /"+self.teacher.first_name
+    
+
+
+class AdministrationEvaluationResponse(models.Model):
+    evaluaton_event = models.ForeignKey(EvaluationEvent, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    administrator = models.ForeignKey(Administrator, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    rating = models.CharField(max_length=1)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.question.id)+" /"+self.administrator.first_name+" /"+str(self.evaluaton_event.id)+" /"+self.teacher.first_name
+    
+
+
+
+class SelfEvaluationResponse(models.Model):
+    evaluaton_event = models.ForeignKey(EvaluationEvent, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    rating = models.CharField(max_length=1)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.question.id)+" /"+self.teacher.first_name+" /"+str(self.evaluaton_event.id)

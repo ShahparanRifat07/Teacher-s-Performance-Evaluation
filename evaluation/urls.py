@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import (factor_list,start_evaluation,evaluation_form,course_evaluation,course_evaluation_form,course_evaluation_save,
+from .views import (factor_list,start_evaluation,course_evaluation,course_evaluation_form,course_evaluation_save,
                     colleague_evaluation,colleague_evaluation_form,colleague_evaluation_save,course_evaluation_parent,
-                    course_evaluation_form_parent,course_evaluation_parent_save)
+                    course_evaluation_form_parent,course_evaluation_parent_save,teacher_evaluation_administrations,
+                    teacher_evaluation_administration_form,teacher_evaluation_administration_save,self_evaluation_form,
+                    self_evaluation_save)
                
 app_name ='evaluation'
 urlpatterns = [
@@ -18,4 +20,13 @@ urlpatterns = [
     path('institution/course-evaluation-parent/',course_evaluation_parent,name='course-evaluation-parent'),
     path('institution/<int:c_id>/evaluation-form-parent',course_evaluation_form_parent,name='course-evaluation-form-parent'),
     path('institution/course-evaluation-save-parent/<int:c_id>/<int:e_id>',course_evaluation_parent_save,name='course-evaluation-parent-save'),
+
+
+    path('institution/teacher-evaluation-administrator/',teacher_evaluation_administrations,name='teacher-evaluation-administrator'),
+    path('institution/<int:t_id>/teacher-evaluation-form-administrator',teacher_evaluation_administration_form,name='teacher-evaluation-form-administrator'),
+    path('institution/teacher-evaluation-administrator-save/<int:t_id>/<int:e_id>',teacher_evaluation_administration_save,name='teacher-evaluation-administrator-save'),
+
+
+    path('institution/self-evaluation-form',self_evaluation_form,name='self-evaluation-form'),
+    path('institution/self-evaluation-save/<int:e_id>',self_evaluation_save,name='self-evaluation-save'),
 ]

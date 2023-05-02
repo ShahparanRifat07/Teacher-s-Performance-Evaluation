@@ -4,7 +4,7 @@ from .views import (register,user_login,add_student,dashboard,user_logout,view_s
                     admin_dashboard,student_dashboard,parent_dashboard,teacher_dashboard,administrator_dashboard,
                     download_student_excel,
                     add_course,course_list,
-                    add_administrator,
+                    add_administrator,view_administrator_list,
                     assign_course_to_student,assign_course_to_teacher,student_list_json,student_list_all_json,assign_student,assign_teacher)
 
 app_name ='stakeholder'
@@ -24,9 +24,14 @@ urlpatterns = [
     path('institution/student-list/',view_student_list,name="student-list"),
     path('institution/add-teacher/',add_teacher,name="add-teacher"),
     path('institution/teacher-list/',view_teacher_list,name="teacher-list"),
+
+    
     path('institution/add-department/',add_department,name="add-department"),
     path('institution/department-list/',view_department_list,name="department-list"),
+
+
     path('institution/add-administrator/',add_administrator,name="add-administrator"),
+    path('institution/administrator-list/',view_administrator_list,name="administrator-list"),
 
     #course
     path('institution/add-course/',add_course,name="add-course"),

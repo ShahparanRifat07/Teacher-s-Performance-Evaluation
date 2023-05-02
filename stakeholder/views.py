@@ -420,7 +420,7 @@ def add_administrator(request):
 
                 administrator.save()
                 
-                return redirect('stakeholder:add-administrator')
+                return redirect('stakeholder:administrator-list')
             if request.method == 'GET':
                 context = {
                     'admin' : institution.institution_admin,
@@ -431,6 +431,21 @@ def add_administrator(request):
     else:
         return redirect('stakeholder:login')
 
+
+def view_administrator_list(request):
+    if request.user.is_authenticated:
+        institution = Institution.objects.filter(institution_admin=request.user)
+        if institution:
+            administrators = Administrator.objects.filter(institution=institution[0])
+            context={
+                "administrators" : administrators,
+                'admin' : institution[0].institution_admin,
+            }
+            return render(request,'administrator_list.html',context)
+        else:
+            raise PermissionDenied("You are not allowed")
+    else:
+        return redirect('stakeholder:login')
 
 
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from stakeholder.models import Institution,Student,Parent,Department,Teacher,Course,Administrator
-from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent,StudentEvaluationResponse,TeacherEvaluationResponse, ParentEvaluationResponse
+from .models import Factor,StakeholderTag,Question,InstitutionTag,EvaluationEvent,StudentEvaluationResponse,TeacherEvaluationResponse, ParentEvaluationResponse, AdministrationEvaluationResponse, SelfEvaluationResponse
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q
@@ -321,7 +321,7 @@ def colleague_evaluation_form(request,t_id):
                 start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
                 end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
                 if start_time <= now <= end_time:
-                    factors = evaluaton_event.student_factor.all()
+                    factors = evaluaton_event.teacher_factor.all()
                     questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = teacher_tag))
                     evaluation_started = True
                     context = {
@@ -395,6 +395,103 @@ def colleague_evaluation_save(request,t_id,e_id):
         return redirect('stakeholder:login')
 
 
+#SELF EVALUATION
+
+def self_evaluation_form(request):
+    if request.user.is_authenticated:
+        stakeholder_tag = StakeholderTag.objects.all()
+        #stakeholders
+        self_tag = stakeholder_tag[2]
+        now = timezone.now()
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+
+                    does_exists = SelfEvaluationResponse.objects.filter(Q(evaluaton_event = evaluaton_event) & Q(teacher=teacher)).exists()
+                    if does_exists:
+                        evaluation_started = True
+                        context = {
+                        'evaluation_started' : evaluation_started,
+                        "teacher" : teacher
+                        }
+                        return HttpResponse("self evaluation complete")
+                    else:
+                        factors = evaluaton_event.self_factor.all()
+                        questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = self_tag))
+                        evaluation_started = True
+                        context = {
+                        "evaluation_event": evaluaton_event,
+                        "questions" : questions,
+                        'evaluation_started' : evaluation_started,
+                        "teacher" : teacher,
+                        }
+                        return render(request, 'self_evaluation_form.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                        "teacher" : teacher,
+                    }
+                    return render(request, 'self_evaluation_form.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                    "teacher" : teacher,
+                }
+                return render(request, 'self_evaluation_form.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+
+def self_evaluation_save(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            try:
+                evaluation_event = EvaluationEvent.objects.get(id = e_id)
+                if  evaluation_event.is_start == False:
+                    return HttpResponse("evaluation event isn't started yet")
+                if  evaluation_event.is_end == True:
+                    return HttpResponse("evaluation event already finished")
+            except:
+                return HttpResponse("NO evaluation event found")
+            
+            if request.method == 'POST':
+                # create an empty dictionary to store the question ids and answers
+                answers = {}
+        
+                # loop through the POST data and extract the values for each question
+                for key, value in request.POST.items():
+                    if key.startswith('question-'):
+                        # extract the question ID from the name attribute of the radio button
+                        question_id = int(key.split('-')[1])
+                        # store the answer value in the dictionary
+                        answers[question_id] = value
+
+
+                with transaction.atomic():
+                    for question_id, rating in answers.items():
+                        question = Question.objects.get(id = question_id)
+                        teacher_question_response = SelfEvaluationResponse(evaluaton_event = evaluation_event, question = question, teacher = teacher,rating = str(rating))
+                        teacher_question_response.save()
+                return redirect("stakeholder:teacher-dashboard")
+            else:
+                return HttpResponse("not allowed")
+            
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+#PARENT EVALUATION
 
 
 
@@ -461,7 +558,7 @@ def course_evaluation_form_parent(request,c_id):
                 start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
                 end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
                 if start_time <= now <= end_time:
-                    factors = evaluaton_event.student_factor.all()
+                    factors = evaluaton_event.parent_factor.all()
                     questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = parent_tag))
                     evaluation_started = True
                     context = {
@@ -535,94 +632,151 @@ def course_evaluation_parent_save(request,c_id,e_id):
 
 
 
-def evaluation_form(request):
+
+def teacher_evaluation_administrations(request):
     if request.user.is_authenticated:
-        stakeholder_tag = StakeholderTag.objects.all()
-        #stakeholders
-        student_tag = stakeholder_tag[0]
-        teacher_tag = stakeholder_tag[1]
-        self_tag = stakeholder_tag[2]
-        parent_tag = stakeholder_tag[3]
-        administrator_tag = stakeholder_tag[4]
-
         now = timezone.now()
-
-        student = Student.objects.filter(user = request.user).first()
-        if student:
-            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = student.institution) & Q(is_start = True) & Q(is_end = False)).first()
-            if evaluaton_event:
-                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-
-                if start_time <= now <= end_time:
-                    factors = evaluaton_event.student_factor.all()
-                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = student_tag))
-                    context = {
-                        "questions" : questions
-                    }
-                    return render(request, 'evaluation_form.html',context)
-                else:
-                    return HttpResponse("evaluation is not started yet")
-            else:
-                return HttpResponse("evaluation is not started yet")
-        
-        parent = Parent.objects.filter(user = request.user).first()
-        if parent:
-            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = parent.institution) & Q(is_start = True) & Q(is_end = False)).first()
-
-            if evaluaton_event:
-                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-
-                if start_time <= now <= end_time:
-                    factors = evaluaton_event.parent_factor.all()
-
-                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = parent_tag))
-                    context = {
-                        "questions" : questions
-                    }
-                    return render(request, 'evaluation_form.html',context)
-            else:
-                return HttpResponse("evaluation is not started yet")
-        
-        teacher = Teacher.objects.filter(user = request.user).first()
-        if teacher:
-            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
-            if evaluaton_event:
-                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
-                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
-
-                if start_time <= now <= end_time:
-                    factors = evaluaton_event.teacher_factor.all()
-                    self_factors = evaluation_form.self_factor.all()
-                    questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = teacher_tag))
-                    self_questions = Question.objects.filter(Q(factor__in = self_factors) & Q(stakeholder_tag = self_tag))
-                    context = {
-                        "questions" : questions,
-                        "self_questions"  : self_questions,
-                    }
-                    
-                    return render(request, 'evaluation_form.html',context)
-            else:
-                return HttpResponse('Evaluation is not started yet')
-        
         administrator = Administrator.objects.filter(user = request.user).first()
         if administrator:
             evaluaton_event = EvaluationEvent.objects.filter(Q(institution = administrator.institution) & Q(is_start = True) & Q(is_end = False)).first()
             if evaluaton_event:
                 start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
                 end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
+                if start_time <= now <= end_time:
+                    
+                    teachers = Teacher.objects.filter(institution = administrator.institution)
 
+                    evaluated_teachers = Teacher.objects.filter(
+                        Q(administrationevaluationresponse__administrator=administrator) & Q(administrationevaluationresponse__evaluaton_event = evaluaton_event)).distinct()
+                    unevaluated_teachers = teachers.exclude(Q(id__in=evaluated_teachers))
+
+                    responses = AdministrationEvaluationResponse.objects.filter(administrator=administrator, evaluaton_event=evaluaton_event)
+
+                    total_teacher = Teacher.objects.filter(institution= administrator.institution).count()
+                    # count the distinct teachers in the filtered queryset
+                    evaluated_teacher_count = responses.values('teacher').distinct().count()
+                    reamining_teacher = total_teacher - int(evaluated_teacher_count)
+
+                    evaluation_started = True
+                    context = {
+                    'administrator' : administrator,
+                    'teachers' : unevaluated_teachers, 
+                    'evaluation_started' : evaluation_started,
+                    'reamining_teacher' : reamining_teacher,
+                    }
+                    return render(request, 'teacher_evaluation_administration.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'administrator' : administrator,
+                        'evaluation_started' : evaluation_started,
+                    }
+                    return render(request, 'teacher_evaluation_administration.html',context)
+            else:
+                evaluation_started = False
+                context = {
+                    'administrator' : administrator,
+                    'evaluation_started' : evaluation_started,
+                }
+                return render(request, 'teacher_evaluation_administration.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+def teacher_evaluation_administration_form(request,t_id):
+    if request.user.is_authenticated:
+        stakeholder_tag = StakeholderTag.objects.all()
+        #stakeholders
+        administrator_tag = stakeholder_tag[4]
+        now = timezone.now()
+        administrator = Administrator.objects.filter(user = request.user).first()
+        if administrator:
+            try:
+                teacher = Teacher.objects.get(id = t_id)
+            except:
+                return HttpResponseNotFound("teacher doesn't exists")
+            
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = administrator.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                start_time = timezone.make_aware(datetime.combine(evaluaton_event.start_date, time.min))
+                end_time = timezone.make_aware(datetime.combine(evaluaton_event.end_date, time.max))
                 if start_time <= now <= end_time:
                     factors = evaluaton_event.administrator_factor.all()
                     questions = Question.objects.filter(Q(factor__in = factors) & Q(stakeholder_tag = administrator_tag))
+                    evaluation_started = True
                     context = {
-                        "questions" : questions
+                        "evaluation_event": evaluaton_event,
+                       "questions" : questions,
+                       'evaluation_started' : evaluation_started,
+                       "teacher": teacher,
+                       'administrator' : administrator,
                     }
-                    
-                    return render(request, 'evaluation_form.html',context)
+                    return render(request, 'teacher_evaluation_administration_form.html',context)
+                else:
+                    evaluation_started = False
+                    context = {
+                        'evaluation_started' : evaluation_started,
+                        'administrator' : administrator,
+                    }
+                    return render(request, 'teacher_evaluation_administration_form.html',context)
             else:
-                return HttpResponse('Evaluation is not started yet')
-
+                evaluation_started = False
+                context = {
+                    'evaluation_started' : evaluation_started,
+                    'administrator' : administrator,
+                }
+                return render(request, 'teacher_evaluation_administration_form.html',context)
+        else:
+            return HttpResponse("You are not allowed to view this")
     else:
         return redirect('stakeholder:login')
+    
+
+
+
+def teacher_evaluation_administration_save(request,t_id,e_id):
+    if request.user.is_authenticated:
+        administrator = Administrator.objects.filter(user = request.user).first()
+        if administrator:
+            try:
+                teacher = Teacher.objects.get(id = t_id)   
+            except:
+                return HttpResponseNotFound("Teacher doesn't exists")
+            try:
+                evaluation_event = EvaluationEvent.objects.get(id = e_id)
+                if  evaluation_event.is_start == False:
+                    return HttpResponse("evaluation event isn't started yet")
+                if  evaluation_event.is_end == True:
+                    return HttpResponse("evaluation event already finished")
+            except:
+                return HttpResponse("NO evaluation event found")
+            
+            if request.method == 'POST':
+                # create an empty dictionary to store the question ids and answers
+                answers = {}
+        
+                # loop through the POST data and extract the values for each question
+                for key, value in request.POST.items():
+                    if key.startswith('question-'):
+                        # extract the question ID from the name attribute of the radio button
+                        question_id = int(key.split('-')[1])
+                        # store the answer value in the dictionary
+                        answers[question_id] = value
+
+
+                with transaction.atomic():
+                    for question_id, rating in answers.items():
+                        question = Question.objects.get(id = question_id)
+                        teacher_question_response = AdministrationEvaluationResponse(evaluaton_event = evaluation_event, question = question, administrator = administrator,teacher= teacher,rating = str(rating))
+                        teacher_question_response.save()
+                return redirect("evaluation:teacher-evaluation-administrator")
+            else:
+                return HttpResponse("not allowed")
+            
+        else:
+            return HttpResponse("You are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+

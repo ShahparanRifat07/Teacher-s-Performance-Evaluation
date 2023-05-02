@@ -55,7 +55,7 @@
                 <a href=""><i class="fa-solid fa-user-tie icon"></i>Administrator
                     <i class="bx bx-chevron-right icon-right"></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="administrator_list.html">Administrator List</a></li>
+                    <li><a href="{% url 'stakeholder:administrator-list' %}">Administrator List</a></li>
                     <li><a href="{% url 'stakeholder:add-administrator' %}">Add Administrator</a></li>
                 </ul>
             </li>
@@ -93,9 +93,11 @@
                     <li><a href="{% url 'evaluation:course-evaluation'  %}">Course Evaluation</a></li>
                     {% elif parent %}
                     <li><a href="{% url 'evaluation:course-evaluation-parent'  %}">Course Evaluation</a></li>
+                    {% elif administrator %}
+                    <li><a href="{% url 'evaluation:teacher-evaluation-administrator'  %}">Teacher Evaluation</a></li>
                     {% elif teacher %}
                     <li><a href="{% url 'evaluation:colleague-evaluation'  %}">Colleague Evaluation</a></li>
-                    <li><a href="">Self Evaluation</a></li>
+                    <li><a href="{% url 'evaluation:self-evaluation-form'  %}">Self Evaluation</a></li>
                     {% endif %}
                 </ul>
             </li>

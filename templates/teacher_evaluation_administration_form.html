@@ -8,9 +8,9 @@
     <ul class="breadcrumbs">
         <li><a href="index.html">Home</a></li>
         <li class="divider">/</li>
-        <li><a href="index.html">Colleague Evaluation</a></li>
+        <li><a href="index.html">Teacher Evaluation</a></li>
         <li class="divider">/</li>
-        <li><a href="" class="active">{{colleague.first_name}} {{colleague.last_name}}</a></li>
+        <li><a href="" class="active">{{teacher.first_name}} {{teacher.last_name}}</a></li>
     </ul>
 
 
@@ -23,19 +23,19 @@
             </div>
             <hr>
             <div class="evaluation-course-details">
-                <p><span>Teacher : </span>{{colleague.first_name}}
-                    {{colleague.last_name}}</p>
-                <p><span>Designation : </span> {{colleague.designation}}</p>
-                <p><span>Department : </span> {{colleague.department.name}}</p>
+                <p><span>Teacher : </span>{{teacher.first_name}}
+                    {{teacher.last_name}}</p>
+                <p><span>Designation : </span> {{teacher.designation}}</p>
+                <p><span>Department : </span> {{teacher.department.name}}</p>
             </div>
             <hr>
 
 
             <div class="stakeholder-evaluation-form">
-                <form action="{% url 'evaluation:colleague-evaluation-save' colleague.id evaluation_event.id %}" method="POST">
+                <form action="{% url 'evaluation:teacher-evaluation-administrator-save' teacher.id evaluation_event.id %}" method="POST">
                     {% csrf_token %}
                     <div class="evaluation-question">
-                        {% for question in questions%}
+                        {% for question in questions %}
 
                         <div class="form-outline mb-4">
                             <p> <span class="me-2">Q-{{forloop.counter}}:</span>{{question.question}}</p>
