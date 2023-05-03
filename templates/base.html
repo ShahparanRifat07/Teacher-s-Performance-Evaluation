@@ -113,7 +113,7 @@
                     {% endif %}
 
                     {% if teacher %}
-                    <li><a href="">Current Evaluation Report</a></li>
+                    <li><a href="{% url 'evaluation:current-evaluation-report' %}">Current Evaluation Report</a></li>
                     <li><a href="">Evaluation Report History</a></li>
                     {% endif %}
                 </ul>

@@ -1110,3 +1110,28 @@ main .chart-data .card {
 
 
 /*colleague evaluation*/
+
+
+
+/* current evaluation report */
+.report-stakehoder{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    /* background-color: #03A9F4; */
+}
+
+.report-stakehoder:hover{
+    background-color: #03A9F4;
+    transition: all 0.3s ease;
+    color: white;
+}
+ 
+/* .report-stakehoder h5 {
+    color: white;
+}
+.report-stakehoder i{
+    color: white;
+} */
+/* current evaluation report */

@@ -52,6 +52,7 @@
                     <!-- 3 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4 mt-4">
                         <h5 class="text-dark mb-4 mt-4">Stakeholders:</h5>
+                        {% if institution.institution_type != "1" %}
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
                                 <input type="checkbox" id="stakeholder-student" value="{{student.id}}"
@@ -59,6 +60,7 @@
                                 <label class="form-check-label" for="stakeholder-student">Students</label>
                             </div>
                         </div>
+                        {% endif %}
 
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
@@ -68,12 +70,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
-                            <div class="form-check form-switch permission-checkbox">
-                                <input type="checkbox" id="stakeholder-parent" value="{{parent.id}}" name="stakeholder">
-                                <label class="form-check-label" for="stakeholder-parent">Parents</label>
-                            </div>
-                        </div>
+                        
 
                         <div class="col-6">
                             <div class="form-check form-switch permission-checkbox">
@@ -89,6 +86,15 @@
                                 <label class="form-check-label" for="stakeholder-adminstrator">Administrators</label>
                             </div>
                         </div>
+
+
+                        <div class="col-6">
+                            <div class="form-check form-switch permission-checkbox">
+                                <input type="checkbox" id="stakeholder-parent" value="{{parent.id}}" name="stakeholder">
+                                <label class="form-check-label" for="stakeholder-parent">Parents</label>
+                            </div>
+                        </div>
+
                     </div>
 
 

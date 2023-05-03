@@ -8,6 +8,9 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, time, timedelta
 from django.http import HttpResponse, FileResponse, HttpResponseNotFound
+import itertools
+import plotly.graph_objs as go
+from plotly.offline import plot
 # Create your views here.
 
 
@@ -50,45 +53,51 @@ def start_evaluation(request):
 
 
             if request.method == "POST":
-                stakeholders = request.POST.getlist('stakeholder')
 
-                student_factors = request.POST.getlist('student_factors')
-                teacher_factors = request.POST.getlist('teacher_factors')
-                parent_factors = request.POST.getlist('parent_factors')
-                self_factors = request.POST.getlist('self_factors')
-                administrator_factors = request.POST.getlist('administrator_factors')
-                
-                start_date = request.POST.get('start_date')
-                end_date = request.POST.get('end_date')
+                does_ongoing_evaluation_exists = EvaluationEvent.objects.filter(Q(institution = institution) & Q(is_start = True) & Q(is_end = False)).exists()
 
-                evaluation_event = EvaluationEvent(institution = institution,start_date = start_date, end_date = end_date,is_start = True)
-                evaluation_event.save()
-                with transaction.atomic():
-                    for id in stakeholders:
-                        stakeholder = StakeholderTag.objects.get(id=id)
-                        evaluation_event.stakeholder_tag.add(stakeholder)
+                if does_ongoing_evaluation_exists:
+                    return HttpResponse("There is an ongoing evaluation")
+                else:
+                    stakeholders = request.POST.getlist('stakeholder')
 
-                    for id in student_factors:
-                        factor = Factor.objects.get(id=id)
-                        evaluation_event.student_factor.add(factor)
+                    student_factors = request.POST.getlist('student_factors')
+                    teacher_factors = request.POST.getlist('teacher_factors')
+                    parent_factors = request.POST.getlist('parent_factors')
+                    self_factors = request.POST.getlist('self_factors')
+                    administrator_factors = request.POST.getlist('administrator_factors')
                     
-                    for id in teacher_factors:
-                        factor = Factor.objects.get(id=id)
-                        evaluation_event.teacher_factor.add(factor)
-                    
-                    for id in parent_factors:
-                        factor = Factor.objects.get(id=id)
-                        evaluation_event.parent_factor.add(factor)
-                    
-                    for id in self_factors:
-                        factor = Factor.objects.get(id=id)
-                        evaluation_event.self_factor.add(factor)
-                    
-                    for id in administrator_factors:
-                        factor = Factor.objects.get(id=id)
-                        evaluation_event.administrator_factor.add(factor)
-                       
-                return redirect("evaluation:start-evaluation")
+                    start_date = request.POST.get('start_date')
+                    end_date = request.POST.get('end_date')
+
+                    evaluation_event = EvaluationEvent(institution = institution,start_date = start_date, end_date = end_date,is_start = True)
+                    evaluation_event.save()
+                    with transaction.atomic():
+                        for id in stakeholders:
+                            stakeholder = StakeholderTag.objects.get(id=id)
+                            evaluation_event.stakeholder_tag.add(stakeholder)
+
+                        for id in student_factors:
+                            factor = Factor.objects.get(id=id)
+                            evaluation_event.student_factor.add(factor)
+                        
+                        for id in teacher_factors:
+                            factor = Factor.objects.get(id=id)
+                            evaluation_event.teacher_factor.add(factor)
+                        
+                        for id in parent_factors:
+                            factor = Factor.objects.get(id=id)
+                            evaluation_event.parent_factor.add(factor)
+                        
+                        for id in self_factors:
+                            factor = Factor.objects.get(id=id)
+                            evaluation_event.self_factor.add(factor)
+                        
+                        for id in administrator_factors:
+                            factor = Factor.objects.get(id=id)
+                            evaluation_event.administrator_factor.add(factor)
+                        
+                    return redirect("evaluation:start-evaluation")
 
             if request.method == "GET":
                 context={
@@ -104,6 +113,7 @@ def start_evaluation(request):
                     "tertiary" : tertiary,
                     
                     'admin' : institution.institution_admin,
+                    'institution': institution,
                 }
             
                 return render(request, 'create_evaluation.html',context)
@@ -780,3 +790,372 @@ def teacher_evaluation_administration_save(request,t_id,e_id):
     else:
         return redirect('stakeholder:login')
 
+
+
+
+
+def current_evaluation_report_view(request):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(Q(institution = teacher.institution) & Q(is_start = True) & Q(is_end = False)).first()
+            if evaluaton_event:
+                if request.method == 'GET':
+                    context = {
+                        'evaluation':evaluaton_event,
+                        'teacher':teacher,
+                    }
+                    return render(request, 'current_evaluation_report.html',context)
+            else:
+                return HttpResponse("there is no on going evaluation right now")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+
+
+def student_evaluation_report(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(id = e_id).first()
+            if evaluaton_event:
+
+                responses = StudentEvaluationResponse.objects.filter(
+                    evaluaton_event=evaluaton_event, teacher=teacher
+                ).select_related('question').order_by('question')
+
+                response_dict = {str(q.id): [r.rating for r in group] for q, group in itertools.groupby(responses, lambda r: r.question)}
+
+                question_ids = list(response_dict.keys())
+                questions = Question.objects.filter(id__in=question_ids)
+
+                data = [go.Bar(x=list(response_dict.keys()), y=[sum(map(int, v))/len(v) for v in response_dict.values()])]
+
+                layout = go.Layout(title='Teacher Evaluation Results', xaxis=dict(title='Question ID'), yaxis=dict(title='Average Rating'))
+
+                chart_html = plot({'data': data, 'layout': layout}, output_type='div')
+
+
+                #for each questions
+                plot_divs = {}
+                for question, ratings in response_dict.items():
+                    quesiton_obj = Question.objects.filter(id = question).first()
+                    y_value = []
+                    sum_ = 0
+                    avg = 0
+                    for i in range(len(ratings)):
+                        sum_ = (sum_ + int(ratings[i]))
+                        avg = sum_/(i+1)
+                        y_value.append(avg)
+
+                    x_axis = [f'{i+1}' for i in range(len(ratings))]
+                    y_axis = y_value
+
+                    trace = go.Scatter(
+                        x=x_axis,
+                        y=y_axis,
+                        mode='lines+markers'
+                    )
+
+                    layout = go.Layout(
+                        title=quesiton_obj.question,
+                        xaxis=dict(
+                            title='Responses'
+                        ),
+                        yaxis=dict(
+                            title='Average Ratings',
+                            range=[0, 5] # set y-axis limit
+                        )
+                    )
+
+                    fig = go.Figure(data=[trace], layout=layout)
+
+                    plot_divs[question] = fig.to_html(full_html=False)
+
+                
+                context = {
+                    'chart_html' : chart_html,
+                    'questions' : questions,
+                    'plot_divs' : plot_divs,
+                    'teacher' : teacher,
+                }
+
+                return render(request,'student_evaluation_report.html',context)
+            else:
+                return HttpResponse("no evaluation exists under this id")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+    
+
+def colleague_evaluation_report(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(id = e_id).first()
+            if evaluaton_event:
+
+                responses = TeacherEvaluationResponse.objects.filter(
+                    evaluaton_event=evaluaton_event, teacher=teacher
+                ).select_related('question').order_by('question')
+
+                response_dict = {str(q.id): [r.rating for r in group] for q, group in itertools.groupby(responses, lambda r: r.question)}
+
+                question_ids = list(response_dict.keys())
+                questions = Question.objects.filter(id__in=question_ids)
+
+                data = [go.Bar(x=list(response_dict.keys()), y=[sum(map(int, v))/len(v) for v in response_dict.values()])]
+
+                layout = go.Layout(title='Teacher Evaluation Results', xaxis=dict(title='Question ID'), yaxis=dict(title='Average Rating'))
+
+                chart_html = plot({'data': data, 'layout': layout}, output_type='div')
+
+
+                #for each questions
+                plot_divs = {}
+                for question, ratings in response_dict.items():
+                    quesiton_obj = Question.objects.filter(id = question).first()
+                    y_value = []
+                    sum_ = 0
+                    avg = 0
+                    for i in range(len(ratings)):
+                        sum_ = (sum_ + int(ratings[i]))
+                        avg = sum_/(i+1)
+                        y_value.append(avg)
+
+                    x_axis = [f'{i+1}' for i in range(len(ratings))]
+                    y_axis = y_value
+
+                    trace = go.Scatter(
+                        x=x_axis,
+                        y=y_axis,
+                        mode='lines+markers'
+                    )
+
+                    layout = go.Layout(
+                        title=quesiton_obj.question,
+                        xaxis=dict(
+                            title='Responses'
+                        ),
+                        yaxis=dict(
+                            title='Average Ratings',
+                            range=[0, 5] # set y-axis limit
+                        )
+                    )
+
+                    fig = go.Figure(data=[trace], layout=layout)
+
+                    plot_divs[question] = fig.to_html(full_html=False)
+
+                
+                context = {
+                    'chart_html' : chart_html,
+                    'questions' : questions,
+                    'plot_divs' : plot_divs,
+                    'teacher' : teacher,
+                }
+
+                return render(request,'colleague_evaluation_report.html',context)
+            else:
+                return HttpResponse("no evaluation exists under this id")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+    
+
+
+
+def parent_evaluation_report(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(id = e_id).first()
+            if evaluaton_event:
+
+                responses = ParentEvaluationResponse.objects.filter(
+                    evaluaton_event=evaluaton_event, teacher=teacher
+                ).select_related('question').order_by('question')
+
+                response_dict = {str(q.id): [r.rating for r in group] for q, group in itertools.groupby(responses, lambda r: r.question)}
+
+                question_ids = list(response_dict.keys())
+                questions = Question.objects.filter(id__in=question_ids)
+
+                data = [go.Bar(x=list(response_dict.keys()), y=[sum(map(int, v))/len(v) for v in response_dict.values()])]
+
+                layout = go.Layout(title='Teacher Evaluation Results', xaxis=dict(title='Question ID'), yaxis=dict(title='Average Rating'))
+
+                chart_html = plot({'data': data, 'layout': layout}, output_type='div')
+
+
+                #for each questions
+                plot_divs = {}
+                for question, ratings in response_dict.items():
+                    quesiton_obj = Question.objects.filter(id = question).first()
+                    y_value = []
+                    sum_ = 0
+                    avg = 0
+                    for i in range(len(ratings)):
+                        sum_ = (sum_ + int(ratings[i]))
+                        avg = sum_/(i+1)
+                        y_value.append(avg)
+
+                    x_axis = [f'{i+1}' for i in range(len(ratings))]
+                    y_axis = y_value
+
+                    trace = go.Scatter(
+                        x=x_axis,
+                        y=y_axis,
+                        mode='lines+markers'
+                    )
+
+                    layout = go.Layout(
+                        title=quesiton_obj.question,
+                        xaxis=dict(
+                            title='Responses'
+                        ),
+                        yaxis=dict(
+                            title='Average Ratings',
+                            range=[0, 5] # set y-axis limit
+                        )
+                    )
+
+                    fig = go.Figure(data=[trace], layout=layout)
+
+                    plot_divs[question] = fig.to_html(full_html=False)
+
+                
+                context = {
+                    'chart_html' : chart_html,
+                    'questions' : questions,
+                    'plot_divs' : plot_divs,
+                    'teacher' : teacher,
+                }
+
+                return render(request,'parent_evaluation_report.html',context)
+            else:
+                return HttpResponse("no evaluation exists under this id")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+    
+
+def administrator_evaluation_report(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(id = e_id).first()
+            if evaluaton_event:
+
+                responses = AdministrationEvaluationResponse.objects.filter(
+                    evaluaton_event=evaluaton_event, teacher=teacher
+                ).select_related('question').order_by('question')
+
+                response_dict = {str(q.id): [r.rating for r in group] for q, group in itertools.groupby(responses, lambda r: r.question)}
+
+                question_ids = list(response_dict.keys())
+                questions = Question.objects.filter(id__in=question_ids)
+
+                data = [go.Bar(x=list(response_dict.keys()), y=[sum(map(int, v))/len(v) for v in response_dict.values()])]
+
+                layout = go.Layout(title='Teacher Evaluation Results', xaxis=dict(title='Question ID'), yaxis=dict(title='Average Rating'))
+
+                chart_html = plot({'data': data, 'layout': layout}, output_type='div')
+
+
+                #for each questions
+                plot_divs = {}
+                for question, ratings in response_dict.items():
+                    quesiton_obj = Question.objects.filter(id = question).first()
+                    y_value = []
+                    sum_ = 0
+                    avg = 0
+                    for i in range(len(ratings)):
+                        sum_ = (sum_ + int(ratings[i]))
+                        avg = sum_/(i+1)
+                        y_value.append(avg)
+
+                    x_axis = [f'{i+1}' for i in range(len(ratings))]
+                    y_axis = y_value
+
+                    trace = go.Scatter(
+                        x=x_axis,
+                        y=y_axis,
+                        mode='lines+markers'
+                    )
+
+                    layout = go.Layout(
+                        title=quesiton_obj.question,
+                        xaxis=dict(
+                            title='Responses'
+                        ),
+                        yaxis=dict(
+                            title='Average Ratings',
+                            range=[0, 5] # set y-axis limit
+                        )
+                    )
+
+                    fig = go.Figure(data=[trace], layout=layout)
+
+                    plot_divs[question] = fig.to_html(full_html=False)
+
+                
+                context = {
+                    'chart_html' : chart_html,
+                    'questions' : questions,
+                    'plot_divs' : plot_divs,
+                    'teacher' : teacher,
+                }
+
+                return render(request,'administrator_evaluation_report.html',context)
+            else:
+                return HttpResponse("no evaluation exists under this id")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')
+    
+
+
+def self_evaluation_report(request,e_id):
+    if request.user.is_authenticated:
+        teacher = Teacher.objects.filter(user = request.user).first()
+        if teacher:
+            evaluaton_event = EvaluationEvent.objects.filter(id = e_id).first()
+            if evaluaton_event:
+
+                responses = SelfEvaluationResponse.objects.filter(
+                    evaluaton_event=evaluaton_event, teacher=teacher
+                ).select_related('question').order_by('question')
+
+                response_dict = {str(q.id): [r.rating for r in group] for q, group in itertools.groupby(responses, lambda r: r.question)}
+
+                question_ids = list(response_dict.keys())
+                questions = Question.objects.filter(id__in=question_ids)
+
+                data = [go.Bar(x=list(response_dict.keys()), y=[sum(map(int, v))/len(v) for v in response_dict.values()])]
+
+                layout = go.Layout(title='Teacher Evaluation Results', xaxis=dict(title='Question ID'), yaxis=dict(title='Average Rating'))
+
+                chart_html = plot({'data': data, 'layout': layout}, output_type='div')
+
+
+                
+                
+                context = {
+                    'chart_html' : chart_html,
+                    'questions' : questions,
+                    'teacher' : teacher,
+                }
+
+                return render(request,'administrator_evaluation_report.html',context)
+            else:
+                return HttpResponse("no evaluation exists under this id")
+        else:
+            return HttpResponse("you are not allowed to view this")
+    else:
+        return redirect('stakeholder:login')

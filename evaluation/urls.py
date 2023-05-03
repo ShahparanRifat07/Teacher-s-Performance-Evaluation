@@ -3,7 +3,9 @@ from .views import (factor_list,start_evaluation,course_evaluation,course_evalua
                     colleague_evaluation,colleague_evaluation_form,colleague_evaluation_save,course_evaluation_parent,
                     course_evaluation_form_parent,course_evaluation_parent_save,teacher_evaluation_administrations,
                     teacher_evaluation_administration_form,teacher_evaluation_administration_save,self_evaluation_form,
-                    self_evaluation_save)
+                    self_evaluation_save,
+                    current_evaluation_report_view,student_evaluation_report,colleague_evaluation_report,parent_evaluation_report,
+                    administrator_evaluation_report,self_evaluation_report)
                
 app_name ='evaluation'
 urlpatterns = [
@@ -29,4 +31,14 @@ urlpatterns = [
 
     path('institution/self-evaluation-form',self_evaluation_form,name='self-evaluation-form'),
     path('institution/self-evaluation-save/<int:e_id>',self_evaluation_save,name='self-evaluation-save'),
+
+    path('institution/current-evaluation-report',current_evaluation_report_view,name='current-evaluation-report'),
+    path('institution/student-evaluation-report/<int:e_id>',student_evaluation_report,name='student-evaluation-report'),
+
+    path('institution/colleague-evaluation-report/<int:e_id>',colleague_evaluation_report,name='colleague-evaluation-report'),
+    path('institution/parent-evaluation-report/<int:e_id>',parent_evaluation_report,name='parent-evaluation-report'),
+    path('institution/administrator-evaluation-report/<int:e_id>',administrator_evaluation_report,name='administrator-evaluation-report'),
+    path('institution/self-evaluation-report/<int:e_id>',self_evaluation_report,name='self-evaluation-report'),
+
+
 ]
