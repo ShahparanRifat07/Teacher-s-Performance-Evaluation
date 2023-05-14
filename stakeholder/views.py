@@ -7,7 +7,6 @@ from django.core.exceptions import PermissionDenied
 from .resources import StudentResource
 from tablib import Dataset
 from django.urls import reverse
-import traceback
 import os
 from django.db import transaction
 from core.settings import BASE_DIR
