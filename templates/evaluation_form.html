@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- MAIN -->
+<main>
+    <h1 class="title">Evaluation</h1>
+    <ul class="breadcrumbs">
+        <li><a href="index.html">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="index.html">Evaluation</a></li>
+        <li class="divider">/</li>
+        <li><a href="" class="active">English(A)</a></li>
+    </ul>
+
+
+
+    <div class="evaluation mt-4">
+        <div class="card">
+            <div class="evaluation-head">
+                <h4 class="text-dark">Evaluation</h4>
+            </div>
+            <hr>
+            <div class="evaluation-course-details">
+                <p><span>Course Teacher : </span>Jhon Doe</p>
+                <p><span>Coure Name : </span> English-I</p>
+                <p><span>Course Section : </span> B</p>
+            </div>
+            <hr>
+
+
+            <div class="stakeholder-evaluation-form">
+                <form action="" method="POST">
+                    <div class="evaluation-question">
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-1:</span> The teacher gives his students advice on how to
+                                make the most of both their class time and their free time.</p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-1"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-2:</span> The teacher knows his students personally and
+                                enriches his courses by taking into consideration his students’ individual
+                                differences. The teacher is creative.</p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-2"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-2"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-2"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-2"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-2"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-3:</span> They bring new research projects to the
+                                institutions they belong to. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-3"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-3"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-3"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-3"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-3"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-4:</span> The themes that they are researched are highly
+                                complex and are perceived as being a novelty in the field. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-4"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-4"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-4"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-4"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-4"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-5:</span> The teacher plans his activities and while
+                                implementing his activities, the teacher aims to take each of his students
+                                further than the current level of their knowledge. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-5"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-5"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-5"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-5"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-5"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-6:</span> The teacher is selfless, committed to his work,
+                                and takes unorthodox decisions on the development of his students. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-6"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-6"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-6"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-6"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-6"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-7:</span> The teacher is aware of his responsibilities for
+                                his courses. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-7"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-7"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-7"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-7"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-7"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-8:</span> They convey enthusiasm for their field, both
+                                verbally and nonverbally. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-8"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-8"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-8"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-8"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-8"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-9:</span> They bring their contribution to the development
+                                of the department/faculty/university. </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-9"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-9"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-9"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-9"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-9"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <p> <span class="me-2">Q-10:</span> Overall Rating </p>
+
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-10"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Strongly Agree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-10"
+                                    id="flexRadioDefault2" />
+                                <label class="form-check-label " for="flexRadioDefault2"> Agree
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-10"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Neither Agree or
+                                    Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-10"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1"> Disagree </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ms-2" type="radio" name="question-10"
+                                    id="flexRadioDefault1" />
+                                <label class="form-check-label" for="flexRadioDefault1">Strongly Disagree
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="evaluation-form-message">
+                        <p>Message:</p>
+                        <!-- Message input -->
+                        <div class="form-outline mb-4">
+                            <textarea class="form-control" id="form4Example3" rows="3"></textarea>
+                            <label class="form-label" for="form4Example3">Write Message</label>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="evaluation-form-submit">
+                        <button type="submit" data-mdb-ripple-duration="0"
+                            class="btn btn-primary btn-block mb-4 mt-4">Submit</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+<!-- MAIN -->
+</section>
+
+
+{% endblock %}
